@@ -8,10 +8,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun BookListScreen (
+fun BookListScreen(
     navigateToBookScreen: (Int) -> Unit
 ) {
     Scaffold(
+        topBar = {
+            BookListAppBar()
+        },
         content = {},
         floatingActionButton = {
             ListFab(onFabClicked = navigateToBookScreen)
@@ -37,6 +40,6 @@ fun ListFab(
 
 @Composable
 @Preview
-private fun ListScreenPreview(){
+private fun ListScreenPreview() {
     BookListScreen(navigateToBookScreen = {})
 }
