@@ -26,7 +26,7 @@ class SharedViewModel @Inject constructor (
     val allAuthors: StateFlow<List<Author>> = _allAuthors
 
 
-    fun getAllTasks(){
+    fun getAllBooks(){
         viewModelScope.launch {
             bookRepository.getAllBooks.collect {
                 _allBooks.value = it
