@@ -1,4 +1,4 @@
-package at.htl.neudorfer.music
+package at.htl.neudorfer.books
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("at.htl.neudorfer.music", appContext.packageName)
+        assertEquals("at.htl.neudorfer.books", appContext.packageName)
     }
 }

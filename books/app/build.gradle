@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'at.htl.neudorfer.music'
+    namespace 'at.htl.neudorfer.books'
     compileSdk 32
 
     defaultConfig {
-        applicationId "at.htl.neudorfer.music"
+        applicationId "at.htl.neudorfer.books"
         minSdk 21
         targetSdk 32
         versionCode 1

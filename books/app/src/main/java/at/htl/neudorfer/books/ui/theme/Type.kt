@@ -1,4 +1,4 @@
-package at.htl.neudorfer.music.ui.theme
+package at.htl.neudorfer.books.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

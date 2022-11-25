@@ -1,4 +1,4 @@
-package at.htl.neudorfer.music
+package at.htl.neudorfer.books
 
 import org.junit.Test
 
