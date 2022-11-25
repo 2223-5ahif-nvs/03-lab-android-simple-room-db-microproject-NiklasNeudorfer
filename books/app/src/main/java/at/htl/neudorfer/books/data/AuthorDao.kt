@@ -10,7 +10,7 @@ interface AuthorDao {
     @Query("SELECT * FROM author ORDER BY id ASC")
     fun getAllAuthors(): Flow<List<Author>>
 
-    @Query("SELECT * FROM author WHERE id=:taskId")
+    @Query("SELECT * FROM author WHERE id=:authorId")
     fun getSelectedAuthor(authorId: Int) : Flow<Author>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
