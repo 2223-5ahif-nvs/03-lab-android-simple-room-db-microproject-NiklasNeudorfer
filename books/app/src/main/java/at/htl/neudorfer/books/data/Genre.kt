@@ -1,0 +1,32 @@
+package at.htl.neudorfer.books.data
+
+enum class Genre {
+    FANTASY,
+    SCIENCE_FICTION,
+    ROMANCE,
+    HORROR,
+    THRILLER,
+    MYSTERY,
+    DRAMA,
+    COMEDY,
+    BIOGRAPHY,
+    HISTORY,
+    GUIDE,
+    TRAVEL,
+    CHILDREN,
+    YOUNG_ADULT,
+    POETRY,
+    ENCYCLOPEDIA,
+    DICTIONARY,
+    TEXTBOOK,
+    RELIGION,
+    SCIENCE,
+    HEALTH,
+    COOKBOOK,
+    JOURNAL,
+    PRAYER,
+    SERIES,
+    TRILLOGY,
+    QUADROLOGY,
+    OTHER
+}
