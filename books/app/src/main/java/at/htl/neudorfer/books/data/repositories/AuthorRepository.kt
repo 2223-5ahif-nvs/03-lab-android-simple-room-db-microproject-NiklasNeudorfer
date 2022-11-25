@@ -1,9 +1,7 @@
 package at.htl.neudorfer.books.data.repositories
 
 import at.htl.neudorfer.books.data.AuthorDao
-import at.htl.neudorfer.books.data.BookDao
 import at.htl.neudorfer.books.data.models.Author
-import at.htl.neudorfer.books.data.models.Book
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
