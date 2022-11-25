@@ -1,4 +1,4 @@
-package at.htl.neudorfer.books.data
+package at.htl.neudorfer.books.data.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -8,7 +8,6 @@ data class Author(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val firstName: String,
-    val lastName: String,
-    val books: List<Book>
+    val lastName: String
 )
 {}

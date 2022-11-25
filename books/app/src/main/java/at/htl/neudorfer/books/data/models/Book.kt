@@ -1,4 +1,4 @@
-package at.htl.neudorfer.books.data
+package at.htl.neudorfer.books.data.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

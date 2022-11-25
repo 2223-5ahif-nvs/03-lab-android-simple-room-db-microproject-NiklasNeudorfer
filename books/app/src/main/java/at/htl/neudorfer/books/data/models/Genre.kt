@@ -1,4 +1,4 @@
-package at.htl.neudorfer.books.data
+package at.htl.neudorfer.books.data.models
 
 enum class Genre {
     FANTASY,
