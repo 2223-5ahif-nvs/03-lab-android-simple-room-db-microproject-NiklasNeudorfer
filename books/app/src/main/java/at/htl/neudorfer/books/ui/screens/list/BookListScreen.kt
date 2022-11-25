@@ -9,7 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun BookListScreen(
-    navigateToBookScreen: (Int) -> Unit
+    navigateToBookScreen: (bookId: Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -25,10 +25,12 @@ fun BookListScreen(
 
 @Composable
 fun ListFab(
-    onFabClicked: (Int) -> Unit
+    onFabClicked: (bookId: Int) -> Unit
 ) {
     FloatingActionButton(
-        onClick = { onFabClicked(-1) },
+        onClick = {
+            onFabClicked(-1)
+        },
         backgroundColor = MaterialTheme.colors.primary
     ) {
         Icon(

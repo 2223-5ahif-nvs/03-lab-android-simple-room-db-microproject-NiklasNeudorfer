@@ -8,7 +8,7 @@ import at.htl.neudorfer.books.utils.Constants
 import at.htl.neudorfer.books.utils.Constants.BOOKS_LIST_ARGUMENT_KEY
 
 fun NavGraphBuilder.booksListComposable(
-    navigateToTaskScreen: (Int) -> Unit
+    navigateToTaskScreen: (bookId: Int) -> Unit
 ){
     composable(
         route = Constants.BOOKS_LIST_SCREEN,
