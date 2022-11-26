@@ -36,7 +36,7 @@ import androidx.compose.runtime.setValue
 ├── books
 │   ├── Frontend
 │   └── with Jetpack-Compose
-├── quarkus
+├── library
 │   ├── Backend
 │   └── with Quarkus, for getting data
 ├── docs
