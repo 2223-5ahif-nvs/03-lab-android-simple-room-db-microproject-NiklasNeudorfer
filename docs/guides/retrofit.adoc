@@ -1,4 +1,18 @@
 = Simple Retrofit REST API Example
+Neudorfer Niklas
+1.0.0, 2022-12-15
+ifndef::imagesdir[:imagesdir: .]
+//:toc-placement!:
+:sourcedir: ../src/main/java
+:icons: font
+:sectnums:
+:toc: left
+
+//Need this blank line after ifdef, don't know why...
+ifdef::backend-html5[]
+
+// print the toc here (not at the default position)
+//toc::[]
 
 == Files we will be working with:
 
@@ -248,4 +262,10 @@ for me, it had to be the `http://10.0.2.2:8080/` URL, because I am using the And
 
 == MainViewModel
 
+[NOTE]
+in progress :)
+
 == MainActivity
+
+[NOTE]
+in progress :)
