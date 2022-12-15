@@ -10,17 +10,21 @@ import at.htl.neudorfer.books.data.Book
 import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
-    private var bookListResponse:List<Book> by mutableStateOf(listOf())
-    private var errorMessage: String by mutableStateOf("")
+    var bookListResponse:List<Book> by mutableStateOf(listOf())
+    var errorMessage: String by mutableStateOf("")
 
     fun getBookList() {
         viewModelScope.launch {
             val apiService = ApiService.getInstance()
             try {
                 val bookList = apiService.getBooks()
+                System.out.println("DATA:")
+                System.out.println(bookList)
                 bookListResponse = bookList
             }
             catch (e: Exception) {
+                System.out.println("ERROR:")
+                System.out.println(e.message.toString())
                 errorMessage = e.message.toString()
             }
         }
