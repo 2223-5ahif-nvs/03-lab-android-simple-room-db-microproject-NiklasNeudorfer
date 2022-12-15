@@ -2,8 +2,15 @@
 
 2022/23 - 5AHIF Neudorfer Niklas _alias_ #Avatar#
 
-
 == Current State
+
+-> #I can get data from my local Endpoint and display it on the Emulator#
+
+* I created a new Project, so I can start from scratch and not have to deal with the old code where I encountered an error which I don't know how to fix at the moment.
+
+image::docs/img/12152022_getting_data_from_local_endpoint.png[]
+
+== Previous State
 
 -> Udemy Course - finished `22. List Screen - List App Bar Actions`
 

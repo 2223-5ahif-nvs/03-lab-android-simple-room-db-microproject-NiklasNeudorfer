@@ -1,0 +1,251 @@
+= Simple Retrofit REST API Example
+
+== Files we will be working with:
+
+[source]
+-----
+.
+├── at.htl.books
+│   ├── data
+│   │   ├── Book <.>
+│   │   └──  ...
+│   ├── ui
+│   │   └── ...
+│   ├── MainActivity <.>
+│   └── MainViewModel <.>
+└── ApiService <.>
+-----
+
+<.> *Entity* classes
+<.> *MainActivity*
+<.> *MainViewModel*
+<.> *ApiService*
+
+== Dependencies & Versions
+
+=== Retrofit dependencies
+
+We need to add the following dependencies to our *build.gradle*(:app) file:
+
+[source,groovy]
+-----
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.10'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    implementation "io.coil-kt:coil-compose:2.2.2"
+-----
+
+=== Versions
+
+* In my example I am using the following versions:
+
+** *Kotlin*: 1.7.20
+** *Kotlin-Compiler*: 1.3.2
+** *Compose UI* Version: 1.3.2
+** compile + target *Sdk*: 33
+
+=== Source
+
+[%collapsible]
+.build.gradle(books)
+====
+[source,groovy]
+-----
+buildscript {
+    ext {
+        compose_ui_version = '1.3.2'
+    }
+}// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.3.1' apply false
+    id 'com.android.library' version '7.3.1' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
+}
+-----
+====
+
+[%collapsible]
+.build.gradle(:app)
+====
+[source,groovy]
+-----
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'at.htl.neudorfer.books'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "at.htl.neudorfer.books"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation "androidx.compose.ui:ui:$compose_ui_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
+    implementation 'androidx.compose.material:material:1.1.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.10'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    implementation "io.coil-kt:coil-compose:2.2.2"
+}
+-----
+====
+
+== Entity
+
+* For the Entities we will be using *data classes*, so we don't have to write boilerplate code. (data class automatically generates getters, setters, ...)
+
+[%collapsible]
+.Book Class
+[source,kotlin]
+-----
+data class Book(
+    val title: String,
+    val description: String,
+    val coverUrl: String,
+    val genre: Genre,
+    val author: Author
+)
+-----
+
+.Genre Enum
+[source,kotlin]
+-----
+import androidx.compose.ui.graphics.Color
+
+enum class Genre(val color: Color) {
+    FANTASY(Color(0xFF8BC34A)),
+    SCIENCE_FICTION(Color(0xFF00FFFF)),
+    ROMANCE(Color(0xFFFFC0CB)),
+    HORROR(Color(0xFF000000)),
+    THRILLER(Color(0xFFE91E63)),
+    OTHER(Color(0xFFA9A9A9));
+    // ...
+}
+-----
+
+[NOTE]
+The _Color_ I used here is that I can use the specific colors per Genre in the UI later on.
+
+.Author Class
+[source,kotlin]
+-----
+data class Book(
+    val title: String,
+    val description: String,
+    val coverUrl: String,
+    val genre: Genre,
+    val author: Author
+)
+-----
+
+== ApiService
+
+* This is a simple code snippet, that shows how to access data from an endpoint with a *GET* request.
+
+[source,kotlin]
+----
+interface ApiService {
+
+    @GET("book/all")
+    suspend fun getBooks(): List<Book>
+
+    companion object{
+        private var apiService: ApiService? = null
+        fun getInstance(): ApiService{
+            if(apiService == null){
+                apiService = Retrofit.Builder()
+                    .baseUrl("http://10.0.2.2:8080/") <.>
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                    .create(ApiService::class.java)
+            }
+            return apiService!!
+        }
+    }
+}
+----
+
+<.> This is the URL of the server.
+If you are using an emulator, you have to use the IP address of the host machine.
+
+[IMPORTANT]
+for me, it had to be the `http://10.0.2.2:8080/` URL, because I am using the Android Emulator.
+
+=== Accessing Data from an Endpoint
+
+[source,xml]
+----
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" /> <.>
+
+    <application
+        android:usesCleartextTraffic="true" <.>
+        ....
+        ....
+    </application>
+</manifest>
+
+----
+
+<.> #This is needed to access the internet.#
+
+<.> This is needed to access Endpoints which are running on #localhost#.
+
+== MainViewModel
+
+== MainActivity
