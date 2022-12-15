@@ -2,14 +2,11 @@
 
 2022/23 - 5AHIF Neudorfer Niklas _alias_ Avatar
 
-## Actions
-
 [![Docs](https://github.com/2223-5ahif-nvs/03-lab-android-simple-room-db-microproject-NiklasNeudorfer/actions/workflows/build-asciidocs.yml/badge.svg)](https://github.com/2223-5ahif-nvs/03-lab-android-simple-room-db-microproject-NiklasNeudorfer/actions/workflows/build-asciidocs.yml)
 
-## Links
+## Important Links
 
-*
-Documentation [here](https://github.com/2223-5ahif-nvs/03-lab-android-simple-room-db-microproject-NiklasNeudorfer/blob/main/docs/index.adoc)
+* [Documentation](https://github.com/2223-5ahif-nvs/03-lab-android-simple-room-db-microproject-NiklasNeudorfer/blob/main/docs/index.adoc)
 
 ## Current State
 
