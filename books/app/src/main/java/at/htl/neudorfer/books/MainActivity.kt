@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
             BooksTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    //MovieList(movieList = mainViewModel.movieListResponse)
+                    BookList(bookList = mainViewModel.bookListResponse)
                     mainViewModel.getBookList()
                 }
             }
@@ -46,6 +46,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// A CONTAINER FOR ONE BOOK
+// where Genre, Cover, short description get displayed
 @Composable
 fun BookItem(book: Book) {
     Card(
@@ -64,7 +66,7 @@ fun BookItem(book: Book) {
 
                 Image(
                     painter = rememberImagePainter(
-                        data = book.coverUrl,
+                        data = R.drawable.placeholder,
 
                         builder = {
                             scale(coil.size.Scale.FILL)
@@ -116,6 +118,20 @@ fun BookItem(book: Book) {
     }
 }
 
+// List of BOOK ITEMS gets displayed
+@Composable
+fun BookList(bookList: List<Book>) {
+    LazyColumn {
+        itemsIndexed(items = bookList) { index, item ->
+            BookItem(book = item)
+        }
+    }
+}
+
+
+
+
+// PREVIEW for showing a simple BOOK ITEM
 @Preview(showBackground = true)
 @Composable
 fun BookItemPreview() {

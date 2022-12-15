@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 interface ApiService {
 
-    @GET("all")
+    @GET("book/all")
     suspend fun getBooks(): List<Book>
 
     companion object{
@@ -16,7 +16,7 @@ interface ApiService {
         fun getInstance(): ApiService{
             if(apiService == null){
                 apiService = Retrofit.Builder()
-                    .baseUrl("http://localhost:8080/book/")
+                    .baseUrl("http://10.0.2.2:8080/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                     .create(ApiService::class.java)
