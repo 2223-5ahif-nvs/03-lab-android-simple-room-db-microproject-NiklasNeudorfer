@@ -64,7 +64,7 @@ fun BookItem(book: Book) {
 
                 Image(
                     painter = rememberImagePainter(
-                        data = "https://howtodoandroid.com/images/coco.jpg",
+                        data = book.coverUrl,
 
                         builder = {
                             scale(coil.size.Scale.FILL)
@@ -124,6 +124,7 @@ fun BookItemPreview() {
         "It is a story of duplicity and treachery, nobility and honour, conquest and " +
                 "triumph. In the frozen wastes to the north of Winterfell, sinister and supernatural " +
                 "forces are mustering. At the centre of the conflict lie the Starks of Winterfell,...",
+        "",
         Genre.FANTASY,
         Author("George R. R.", "Martin"),
     )
