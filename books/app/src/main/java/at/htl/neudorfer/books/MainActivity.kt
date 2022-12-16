@@ -66,13 +66,12 @@ fun BookItem(book: Book) {
 
                 Image(
                     painter = rememberImagePainter(
-                        data = R.drawable.placeholder,
+                        data = book.coverUrl,
 
                         builder = {
                             scale(coil.size.Scale.FILL)
                             placeholder(R.drawable.placeholder)
                             transformations(CircleCropTransformation())
-
                         }
                     ),
                     contentDescription = "",
