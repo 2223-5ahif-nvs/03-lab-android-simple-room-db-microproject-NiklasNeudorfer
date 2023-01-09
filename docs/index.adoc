@@ -1,0 +1,53 @@
+= Microproject - Neudorfer 22/23
+Neudorfer Niklas
+1.0.0, 2022-12-15
+ifndef::imagesdir[:imagesdir: .]
+//:toc-placement!:
+:sourcedir: .
+:icons: font
+:sectnums:
+:toc: left
+
+//Need this blank line after ifdef, don't know why...
+ifdef::backend-html5[]
+
+// print the toc here (not at the default position)
+//toc::[]
+
+== Introduction
+
+* this is the Microproject from me, Neudorfer Niklas _alias_ #Avatar# from the 5AHIF
+
+== Documentation / Guides
+
+* link:guides/retrofit.adoc[Retrofit Guide]
+
+== States
+
+* link:states/state_15_12_2022.adoc[Current State]
+
+* link:states/state_25_11_2022.adoc[State 15.12.2022]
+
+== Folder Structure
+
+* because the names can be a bit confusing here is a short explanation of the folder structure.
+
+[source]
+-----
+.
+├── books
+│   ├── Frontend
+│   └── with Jetpack-Compose
+├── library
+│   ├── Backend
+│   └── with Quarkus, for getting data
+├── docs
+│   ├── AsciiDoc
+│   ├── documentation
+│   └── location for screenshots & images
+└── README.adoc
+-----
+
+== Source
+
+* https://www.udemy.com/course/to-do-app-with-jetpack-compose-mvvm-android-development/learn/lecture/27993710#overview[Udemy Course]
