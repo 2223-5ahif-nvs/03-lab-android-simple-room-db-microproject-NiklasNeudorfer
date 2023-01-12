@@ -25,20 +25,24 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+// Source for the Tabs:
+// https://www.rockandnull.com/jetpack-compose-swipe-pager/
+
 @Composable
 fun Tabs() {
-    var tabIndex by remember { mutableStateOf(0) } // 1.
+    var tabIndex by remember { mutableStateOf(0) }
 
     val tabTitles = listOf("Books", "Authors")
-    Column { // 2.
-        TabRow(selectedTabIndex = tabIndex) { // 3.
+    Column {
+        TabRow(selectedTabIndex = tabIndex) {
             tabTitles.forEachIndexed { index, title ->
-                Tab(selected = tabIndex == index, // 4.
+                Tab(selected = tabIndex == index,
                     onClick = { tabIndex = index },
-                    text = { Text(text = title) }) // 5.
+                    text = { Text(text = title) })
             }
         }
-        when (tabIndex) { // 6.
+        when (tabIndex) {
             0 -> BookList()
             1 -> AuthorsListScreen()
         }
