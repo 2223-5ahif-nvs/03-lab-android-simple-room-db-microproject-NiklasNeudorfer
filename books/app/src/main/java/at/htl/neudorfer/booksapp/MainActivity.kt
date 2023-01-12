@@ -1,4 +1,4 @@
-package at.htl.neudorfer.books
+package at.htl.neudorfer.booksapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -17,16 +16,16 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import at.htl.neudorfer.books.data.Author
-import at.htl.neudorfer.books.data.Book
-import at.htl.neudorfer.books.data.Genre
-import at.htl.neudorfer.books.ui.theme.BooksTheme
+import at.htl.neudorfer.booksapp.data.Author
+import at.htl.neudorfer.booksapp.data.Book
+import at.htl.neudorfer.booksapp.data.Genre
+import at.htl.neudorfer.booksapp.ui.theme.BooksTheme
 import coil.compose.rememberImagePainter
+import coil.size.Scale
 import coil.transform.CircleCropTransformation
 
 class MainActivity : ComponentActivity() {
@@ -69,7 +68,7 @@ fun BookItem(book: Book) {
                         data = book.coverUrl,
 
                         builder = {
-                            scale(coil.size.Scale.FILL)
+                            scale(Scale.FILL)
                             placeholder(R.drawable.placeholder)
                             transformations(CircleCropTransformation())
                         }

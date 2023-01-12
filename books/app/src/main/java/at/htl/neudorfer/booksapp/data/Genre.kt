@@ -1,4 +1,4 @@
-package at.htl.neudorfer.books.data
+package at.htl.neudorfer.booksapp.data
 
 import androidx.compose.ui.graphics.Color
 

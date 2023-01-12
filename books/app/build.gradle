@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'at.htl.neudorfer.books'
+    namespace 'at.htl.neudorfer.booksapp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "at.htl.neudorfer.books"
+        applicationId "at.htl.neudorfer.booksapp"
         minSdk 21
         targetSdk 33
         versionCode 1

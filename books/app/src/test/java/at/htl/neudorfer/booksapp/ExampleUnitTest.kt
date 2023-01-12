@@ -1,4 +1,4 @@
-package at.htl.neudorfer.books
+package at.htl.neudorfer.booksapp
 
 import org.junit.Test
 

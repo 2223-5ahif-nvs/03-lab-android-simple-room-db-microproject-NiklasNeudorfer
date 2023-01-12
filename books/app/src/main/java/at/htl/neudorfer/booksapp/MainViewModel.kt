@@ -1,12 +1,12 @@
-package at.htl.neudorfer.books
+package at.htl.neudorfer.booksapp
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import at.htl.neudorfer.ApiService
-import at.htl.neudorfer.books.data.Book
+import at.htl.neudorfer.booksapp.model.api.ApiService
+import at.htl.neudorfer.booksapp.data.Book
 import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {

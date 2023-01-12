@@ -1,4 +1,4 @@
-package at.htl.neudorfer.books.data
+package at.htl.neudorfer.booksapp.data
 
 data class Book(
     val title: String,
