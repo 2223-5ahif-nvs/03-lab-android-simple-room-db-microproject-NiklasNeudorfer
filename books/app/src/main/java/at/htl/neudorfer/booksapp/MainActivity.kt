@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.data.Book
 import at.htl.neudorfer.booksapp.data.Genre
+import at.htl.neudorfer.booksapp.ui.authors.AuthorsListScreen
 import at.htl.neudorfer.booksapp.ui.books.BooksViewModel
 import at.htl.neudorfer.booksapp.ui.theme.BooksTheme
 import coil.compose.rememberImagePainter
@@ -32,15 +33,23 @@ import coil.transform.CircleCropTransformation
 class MainActivity : ComponentActivity() {
     val booksViewModel by viewModels<BooksViewModel>()
 
+    //    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            BooksTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(color = MaterialTheme.colors.background) {
+//                    BookList(bookList = booksViewModel.bookListResponse)
+//                    booksViewModel.getBookList()
+//                }
+//            }
+//        }
+//    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            BooksTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    BookList(bookList = booksViewModel.bookListResponse)
-                    booksViewModel.getBookList()
-                }
+            BooksTheme() {
+                AuthorsListScreen()
             }
         }
     }
@@ -126,8 +135,6 @@ fun BookList(bookList: List<Book>) {
         }
     }
 }
-
-
 
 
 // PREVIEW for showing a simple BOOK ITEM
