@@ -1,4 +1,4 @@
-package at.htl.neudorfer.booksapp
+package at.htl.neudorfer.booksapp.ui.books
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,7 +9,7 @@ import at.htl.neudorfer.booksapp.model.api.ApiService
 import at.htl.neudorfer.booksapp.data.Book
 import kotlinx.coroutines.launch
 
-class MainViewModel: ViewModel() {
+class BooksViewModel: ViewModel() {
     var bookListResponse:List<Book> by mutableStateOf(listOf())
     var errorMessage: String by mutableStateOf("")
 

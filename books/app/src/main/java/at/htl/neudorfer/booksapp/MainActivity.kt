@@ -23,13 +23,14 @@ import androidx.compose.ui.unit.dp
 import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.data.Book
 import at.htl.neudorfer.booksapp.data.Genre
+import at.htl.neudorfer.booksapp.ui.books.BooksViewModel
 import at.htl.neudorfer.booksapp.ui.theme.BooksTheme
 import coil.compose.rememberImagePainter
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
 
 class MainActivity : ComponentActivity() {
-    val mainViewModel by viewModels<MainViewModel>()
+    val booksViewModel by viewModels<BooksViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +38,8 @@ class MainActivity : ComponentActivity() {
             BooksTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    BookList(bookList = mainViewModel.bookListResponse)
-                    mainViewModel.getBookList()
+                    BookList(bookList = booksViewModel.bookListResponse)
+                    booksViewModel.getBookList()
                 }
             }
         }
