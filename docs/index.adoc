@@ -22,6 +22,8 @@ ifdef::backend-html5[]
 
 * link:guides/retrofit.adoc[Retrofit Guide]
 
+* link:guides/guideForTest.adoc[Test Cheatsheet]
+
 == States
 
 * link:states/state_15_12_2022.adoc[Current State]

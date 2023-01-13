@@ -1,0 +1,293 @@
+= Cheatsheet for (maybe last) NVS Test
+Neudorfer Niklas
+1.0.0, 2022-01-12
+ifndef::imagesdir[:imagesdir: .]
+//:toc-placement!:
+:sourcedir: ../src/main/java
+:icons: font
+:sectnums:
+:toc: left
+
+//Need this blank line after ifdef, don't know why...
+ifdef::backend-html5[]
+
+// print the toc here (not at the default position)
+//toc::[]
+
+== Requirements / Versions
+
+=== Versions
+
+* In my example I am using the following versions:
+
+** *Kotlin*: 1.7.20
+** *Kotlin-Compiler*: 1.3.2
+** *Compose UI* Version: 1.3.2
+** compile + target *Sdk*: 33
+
+=== Source
+
+[NOTE]
+====
+Don't just copy!
+Stuff like e.g. the namespace won't work for you.
+====
+
+[%collapsible]
+.build.gradle(books)
+====
+[source,groovy]
+-----
+buildscript {
+    ext {
+        compose_ui_version = '1.3.2'
+    }
+}// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.3.1' apply false
+    id 'com.android.library' version '7.3.1' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
+}
+-----
+====
+
+[%collapsible]
+.build.gradle(:app)
+====
+[source,groovy]
+-----
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'at.htl.neudorfer.booksapp'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "at.htl.neudorfer.booksapp"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation "androidx.compose.ui:ui:$compose_ui_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
+    implementation 'androidx.compose.material:material:1.1.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.10'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
+
+    implementation "io.coil-kt:coil-compose:2.2.2"
+}
+-----
+====
+
+== App
+
+This is my interpretation how the app normally works:
+
+[plantuml,target=diagram-classes,format=png]
+....
+object Screen{
+displays the Data as a List e.g.
+In a small application this can be in the
+MainActivity
+}
+
+object Repository{
+gets the Data from the Api Service &
+returns it to the ViewModel
+}
+
+object ApiService{
+The ApiService / WebService
+gets the Data from the Api or Quarkus Backend
+and parses the response to a data class
+}
+
+
+object ViewModel {
+gets the Data from the Repository and
+calls the Screen
+}
+
+ApiService --> Repository
+Repository --> ViewModel
+ViewModel --> Screen
+
+....
+
+[IMPORTANT]
+====
+Disclaimer!
+
+It can be that I implemented some things on a different way than Prof. Stuetz in his latest Guide, about the Mealz App, he showed us.
+I don't think there's a big difference, but it is important to know that it doesn't have to be everything 100% correct, but it worked in my demo :D
+====
+
+=== ApiService
+
+In my case the ApiService is a interface.
+
+The Part which defines the Endpoint where you can get data are functions which have the annotation `@GET(<url>)` and are returning the "correct" data, for example:  `List< <Response> >`.
+#Don't forget# to add the `suspend` Keyword in front of the function!
+
+The Important Part, which defines where the Endpoint is, and how the Data should be parsed is in a companion object.
+A companion object is basically a Singleton Object, and it should look something like the following
+
+.ApiService - Companion Object
+[source,kotlin]
+----
+    companion object{
+        private var apiService: ApiService? = null
+        fun getInstance(): ApiService {
+            if(apiService == null){
+                apiService = Retrofit.Builder()
+                    .baseUrl("<url>")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                    .create(ApiService::class.java)
+            }
+            return apiService!!
+        }
+    }
+----
+
+=== Repository
+
+The Repository is really simple, it just calls the ApiService and returns the Data.
+
+The ApiService is provided as a Parameter, but so you don't have to create a new ApiService you can set the *default value* to the previously created function called `getInstance()`.
+
+The only thing you have to do now is to add functions (with the suspend Keyword!!) which calls the ApiService and returns the Data.
+
+=== ViewModel
+
+The ViewModel is also really simple, it just calls the Repository and sets the Data to a list.
+
+To Tell Android that your `ViewModel` is a `ViewModel` you have to make it inherit  `ViewModel()`
+
+.ViewModel
+[source,kotlin]
+----
+    val TAG = AuthorsViewModel::class.java.name; <.>
+
+    init {
+        viewModelScope.launch {
+            val data = getData() //<.>
+            Log.d(TAG, "Data: $data")
+            dataState.value = data
+        }
+    }
+
+    val dataState: MutableState<List<Data>> = mutableStateOf((emptyList<Data>()))
+----
+
+<.> The Tag is used for Logging.
+It is a good practice to use the name of the class as Tag, so you know where something got logged from just looking at the logs.
+<.> This is where you should call your Data from the Repository.
+
+[NOTE]
+====
+Now when you want to access the Data from your Screen (or MainActivity) you have to use `viewModel.dataState.value`
+====
+
+=== Screen
+
+The Screen is the View of your App, it is the part where you can see the Data.
+In this case the Screen is a `@Composable` Function, which is called in the MainActivity.
+
+This is how you can get your Data from the ViewModel.
+And display it in a list as an example.
+[source,kotlin]
+
+----
+    val viewModel: DataViewModel = viewModel();
+    val data = viewModel.dataState.value
+
+    LazyColumn(){
+        items(data) { d ->
+            Datatem(d)
+        }
+    }
+----
+
+.Simple way for Displaying the Data:
+[source,kotlin]
+----
+Text(text = data.name)
+----
+
+[NOTE]
+In most cases it would be smarter to first just display the data in a simple way.
+And only after that works you can take your time and make it look nice.
+
+But when you are far enough to make it look nice, you can use the following code to make it look nice.
+In the composable you can e.g. make a `Card` with a plain `Row` inside of it, and inside of the `Row` you can add a `AsyncImage` (with model = url of the image) or a `Column` in which you can display the Data as a simple `Text()`.
+
+== Common Problems
+
+[IMPORTANT]
+====
+You have to add `android:usesCleartextTraffic="true"` to your Manifest, otherwise the communication between your Android App and the local Quarkus Backend won't work.
+====
+
+[IMPORTANT]
+====
+In order to access your "localhost" you have to use `http://10.0.2.2:8080/`.
+This is because the Android Emulator, which is running on your computer, is not able to access your localhost.
+====
+
+[IMPORTANT]
+====
+By Default the Android Emulator is not able to access the Internet.
+You have to enable it like the following: `<uses-permission android:name="android.permission.INTERNET" />` in your Manifest
+====

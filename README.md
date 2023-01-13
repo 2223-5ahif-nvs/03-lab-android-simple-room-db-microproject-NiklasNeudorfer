@@ -4,6 +4,11 @@
 
 [![Docs](https://github.com/2223-5ahif-nvs/03-lab-android-simple-room-db-microproject-NiklasNeudorfer/actions/workflows/build-asciidocs.yml/badge.svg)](https://github.com/2223-5ahif-nvs/03-lab-android-simple-room-db-microproject-NiklasNeudorfer/actions/workflows/build-asciidocs.yml)
 
+# Source:
+
+* [Kaggle - CSV Data](https://www.kaggle.com/datasets/saurabhbagchi/books-dataset)
+* [Placeholder Credits!!](https://www.flaticon.com/free-icons/bookmark)
+
 ## Important Links
 
 * [Documentation](https://github.com/2223-5ahif-nvs/03-lab-android-simple-room-db-microproject-NiklasNeudorfer/blob/main/docs/index.adoc)
