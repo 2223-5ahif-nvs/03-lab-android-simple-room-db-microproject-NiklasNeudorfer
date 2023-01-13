@@ -20,7 +20,7 @@ public class BookRepository {
         List<Book> books = new ArrayList<>();
 
 
-        try (var file = Files.lines(Paths.get("src/main/resources/books.csv"));) {
+        try (var file = Files.lines(Paths.get("src/main/resources/books-shortened.csv"));) {
 
             file.skip(1).map(line ->
                     line.replace("\"", "")
@@ -29,15 +29,15 @@ public class BookRepository {
 
                 books.add(
                         new Book(
-                                line[0],
-                                line[1],
+                                line[0].trim(),
+                                line[1].trim(),
                                 Genre.values()[new Random().nextInt(Genre.values().length)],
-                                Integer.parseInt(line[3]),
-                                new Author(line[2]),
-                                new Publisher(line[4]),
-                                line[5],
-                                line[6],
-                                line[7]
+                                Integer.parseInt(line[3].trim()),
+                                new Author(line[2].trim()),
+                                new Publisher(line[4].trim()),
+                                line[5].trim(),
+                                line[6].trim(),
+                                line[7].trim()
                         )
                 );
             });
