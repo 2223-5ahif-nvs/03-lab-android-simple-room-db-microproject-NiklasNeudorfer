@@ -1,8 +1,6 @@
 package at.htl.neudorfer.boundary;
 
-import at.htl.neudorfer.control.AuthorRepository;
 import at.htl.neudorfer.control.BookRepository;
-import at.htl.neudorfer.entity.Author;
 import at.htl.neudorfer.entity.Book;
 
 import javax.inject.Inject;
