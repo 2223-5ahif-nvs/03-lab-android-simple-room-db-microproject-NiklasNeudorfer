@@ -1,6 +1,9 @@
 package at.htl.neudorfer.booksapp.ui.authors
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.ui.theme.BooksTheme
-import coil.compose.AsyncImage
 
 
 @Composable
@@ -52,7 +54,7 @@ fun AuthorItem(author: Author) {
                     .align(Alignment.CenterVertically)
                     .padding(16.dp)
             ) {
-                Text(text = author.firstName + " " + author.lastName)
+                Text(text = author.fullName)
             }
         }
     }

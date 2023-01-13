@@ -1,17 +1,15 @@
 package at.htl.neudorfer.booksapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import at.htl.neudorfer.booksapp.data.Book
 import at.htl.neudorfer.booksapp.ui.authors.AuthorsListScreen
 import at.htl.neudorfer.booksapp.ui.books.BookList
-import at.htl.neudorfer.booksapp.ui.books.BooksViewModel
 import at.htl.neudorfer.booksapp.ui.theme.BooksTheme
 
 class MainActivity : ComponentActivity() {

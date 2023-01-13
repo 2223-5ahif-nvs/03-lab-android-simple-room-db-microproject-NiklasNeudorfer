@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import at.htl.neudorfer.booksapp.model.api.ApiService
 import at.htl.neudorfer.booksapp.data.Book
+import at.htl.neudorfer.booksapp.model.api.ApiService
 import kotlinx.coroutines.launch
 
 class BooksViewModel: ViewModel() {

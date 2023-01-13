@@ -6,11 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.htl.neudorfer.booksapp.data.Author
-import at.htl.neudorfer.booksapp.model.BooksRepository
+import at.htl.neudorfer.booksapp.model.AuthorsRepository
 import kotlinx.coroutines.launch
 
 class AuthorsViewModel(
-    private val booksRepository: BooksRepository = BooksRepository()
+    private val authorsRepository: AuthorsRepository = AuthorsRepository()
 ): ViewModel() {
     val TAG = AuthorsViewModel::class.java.name;
 
@@ -25,6 +25,6 @@ class AuthorsViewModel(
     val authorsState: MutableState<List<Author>> = mutableStateOf((emptyList<Author>()))
 
     private suspend fun getAuthors():List<Author> {
-        return booksRepository.getBookAuthors();
+        return authorsRepository.getBookAuthors();
     }
 }
