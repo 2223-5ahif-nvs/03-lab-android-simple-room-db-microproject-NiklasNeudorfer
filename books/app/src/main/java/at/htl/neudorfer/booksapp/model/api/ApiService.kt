@@ -1,5 +1,6 @@
 package at.htl.neudorfer.booksapp.model.api
 
+import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.data.Book
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -10,6 +11,9 @@ interface ApiService {
 
     @GET("book/all")
     suspend fun getBooks(): List<Book>
+
+    @GET("author/all")
+    suspend fun getAuthors(): List<Author>
 
     companion object{
         private var apiService: ApiService? = null

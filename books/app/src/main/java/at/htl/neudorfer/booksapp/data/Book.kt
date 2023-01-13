@@ -1,9 +1,16 @@
 package at.htl.neudorfer.booksapp.data
 
 data class Book(
+    val isbn: String,
     val title: String,
-    val description: String,
-    val coverUrl: String,
     val genre: Genre,
-    val author: Author
+    val yearOfPublication: Int,
+
+    val author: Author,
+    val publisher: Publisher,
+
+    // Image Urls
+    val coverUrlSmall: String,
+    val coverUrlMedium: String,
+    val coverUrlLarge: String
 )
