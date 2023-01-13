@@ -50,6 +50,22 @@ ifdef::backend-html5[]
 └── README.adoc
 -----
 
+== Commit Guidelines
+
+* For the future commits I want to use the following guidelines:
+
+[source]
+-----
+docu - ...
+frontend - ...
+backend - ...
+-----
+
+* e.g
+** `docu - added new documentation for the frontend`
+** `frontend - added detail Screen`
+** `backend - added new endpoint for getting data`
+
 == Source
 
 * https://www.udemy.com/course/to-do-app-with-jetpack-compose-mvvm-android-development/learn/lecture/27993710#overview[Udemy Course]
