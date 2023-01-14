@@ -9,13 +9,15 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.data.Book
@@ -23,6 +25,9 @@ import at.htl.neudorfer.booksapp.data.Genre
 import at.htl.neudorfer.booksapp.data.Publisher
 import coil.compose.AsyncImage
 import at.htl.neudorfer.booksapp.R
+import coil.request.ImageRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 // PREVIEW for showing a simple BOOK ITEM
@@ -47,11 +52,7 @@ fun BookItemPreview() {
 @Composable
 fun BookList() {
     val viewModel: BooksViewModel = viewModel();
-    viewModel.getBookList()
-    val bookList = viewModel.bookListResponse;
-
-
-    Log.d("BookList", "BookList: $bookList")
+    val bookList = viewModel.booksState.value
 
     LazyColumn {
         itemsIndexed(items = bookList) { index, item ->
@@ -79,7 +80,10 @@ fun BookItem(book: Book) {
             ) {
 
                 AsyncImage(
-                    model = book.coverUrlSmall, // TODO not working at the moment
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data("http://images.amazon.com/images/P/0312261594.01.THUMBZZZ.jpg")
+                        .crossfade(true)
+                        .build(), // TODO not working at the moment
                     contentDescription = "Book Cover from ${book.title} by ${book.author.fullName}",
                     error = painterResource(R.drawable.bookmark),
                     modifier = Modifier

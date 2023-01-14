@@ -1,32 +1,35 @@
 package at.htl.neudorfer.booksapp.ui.books
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.data.Book
+import at.htl.neudorfer.booksapp.model.BooksRepository
 import at.htl.neudorfer.booksapp.model.api.ApiService
+import at.htl.neudorfer.booksapp.ui.authors.AuthorsViewModel
 import kotlinx.coroutines.launch
 
-class BooksViewModel: ViewModel() {
-    var bookListResponse:List<Book> by mutableStateOf(listOf())
-    var errorMessage: String by mutableStateOf("")
+class BooksViewModel(
+    private val booksRepository: BooksRepository = BooksRepository()
+): ViewModel() {
+    val TAG = BooksViewModel::class.java.name;
 
-    fun getBookList() {
+    init {
         viewModelScope.launch {
-            val apiService = ApiService.getInstance()
-            try {
-                val bookList = apiService.getBooks()
-                System.out.println("DATA:")
-                System.out.println(bookList)
-                bookListResponse = bookList
-            }
-            catch (e: Exception) {
-                System.out.println("ERROR:")
-                System.out.println(e.message.toString())
-                errorMessage = e.message.toString()
-            }
+            val books = getBooks()
+            Log.d(TAG, "Books: $books")
+            booksState.value = books
         }
+    }
+
+    val booksState: MutableState<List<Book>> = mutableStateOf((emptyList<Book>()))
+
+    suspend fun getBooks():List<Book> {
+        return booksRepository.getBooks();
     }
 }
