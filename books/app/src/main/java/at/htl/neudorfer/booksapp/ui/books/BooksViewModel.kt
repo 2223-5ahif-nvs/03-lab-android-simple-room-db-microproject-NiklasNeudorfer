@@ -2,16 +2,11 @@ package at.htl.neudorfer.booksapp.ui.books
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.data.Book
 import at.htl.neudorfer.booksapp.model.BooksRepository
-import at.htl.neudorfer.booksapp.model.api.ApiService
-import at.htl.neudorfer.booksapp.ui.authors.AuthorsViewModel
 import kotlinx.coroutines.launch
 
 class BooksViewModel(

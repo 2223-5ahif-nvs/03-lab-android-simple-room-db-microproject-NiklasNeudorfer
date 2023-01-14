@@ -1,6 +1,5 @@
 package at.htl.neudorfer.booksapp.ui.books
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -9,7 +8,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -17,17 +16,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import at.htl.neudorfer.booksapp.R
 import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.data.Book
 import at.htl.neudorfer.booksapp.data.Genre
 import at.htl.neudorfer.booksapp.data.Publisher
 import coil.compose.AsyncImage
-import at.htl.neudorfer.booksapp.R
 import coil.request.ImageRequest
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 // PREVIEW for showing a simple BOOK ITEM
@@ -41,9 +37,9 @@ fun BookItemPreview() {
         1954,
         Author("J. R. R. Tolkien"),
         Publisher("Allen & Unwin"),
-        "https://images-na.ssl-images-amazon.com/images/I/51Zt3uZJFJL._SX331_BO1,204,203,200_.jpg",
-        "https://www.amazon.com/Lord-Rings-1-J-R-Tolkien/dp/0618260307",
-        "https://www.goodreads.com/book/show/33.The_Lord_of_the_Rings"
+        "https://www.pngmart.com/files/16/Electric-Chainsaw-PNG-Transparent-Image.png",
+        "https://www.pngmart.com/files/16/Electric-Chainsaw-PNG-Transparent-Image.png",
+        "https://www.pngmart.com/files/16/Electric-Chainsaw-PNG-Transparent-Image.png"
     )
     BookItem(book = book)
 }
@@ -81,11 +77,11 @@ fun BookItem(book: Book) {
 
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data("http://images.amazon.com/images/P/0312261594.01.THUMBZZZ.jpg")
+                        .data("http://10.0.2.2:8080/imgs/book_placeholder_"+ (1..10).random() +".png")
                         .crossfade(true)
                         .build(), // TODO not working at the moment
                     contentDescription = "Book Cover from ${book.title} by ${book.author.fullName}",
-                    error = painterResource(R.drawable.bookmark),
+                    error = painterResource(R.drawable.placeholder),
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(0.2f)
