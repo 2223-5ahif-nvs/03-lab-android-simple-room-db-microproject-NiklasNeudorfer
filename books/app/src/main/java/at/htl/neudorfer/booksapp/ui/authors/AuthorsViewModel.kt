@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.htl.neudorfer.booksapp.data.Author
-import at.htl.neudorfer.booksapp.model.AppModule
 import at.htl.neudorfer.booksapp.model.AuthorsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

@@ -51,7 +51,7 @@ fun BookList() {
     val bookList = viewModel.booksState.value
 
     LazyColumn {
-        itemsIndexed(items = bookList) { index, item ->
+        itemsIndexed(items = bookList) { _, item ->
             BookItem(book = item)
         }
     }
