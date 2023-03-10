@@ -3,6 +3,7 @@ package at.htl.neudorfer.booksapp.model
 import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.model.api.ApiService
 import at.htl.neudorfer.booksapp.model.db.dao.AuthorDao
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 data class AuthorsRepository @Inject constructor(
@@ -15,7 +16,6 @@ data class AuthorsRepository @Inject constructor(
     }
 
 
-
     // ----------------------------------------------------
     //      DATABASE ACCESS
     // ----------------------------------------------------
@@ -24,6 +24,10 @@ data class AuthorsRepository @Inject constructor(
         if (authorDao.findByName(author.fullName) == null) {
             authorDao.insert(author)
         }
+    }
+
+    suspend fun getAllAuthorsFromDB(): Flow<List<Author>> {
+        return authorDao.getAll()
     }
 
     suspend fun deleteAuthor(author: Author) {
