@@ -1,8 +1,8 @@
-package at.htl.neudorfer.booksapp.model
+package at.htl.neudorfer.booksapp.model.db
 
 import android.content.Context
 import androidx.room.Room
-import at.htl.neudorfer.booksapp.model.db.AppDatabase
+import at.htl.neudorfer.booksapp.model.AuthorsRepository
 import at.htl.neudorfer.booksapp.model.db.dao.AuthorDao
 import dagger.Module
 import dagger.Provides
@@ -30,7 +30,7 @@ object AppModule {
 
 
     @Provides
-    fun provideAuthorRepo(dao: AuthorDao) : AuthorsRepository{
+    fun provideAuthorRepo(dao: AuthorDao) : AuthorsRepository {
         return AuthorsRepository(dao)
     }
 
