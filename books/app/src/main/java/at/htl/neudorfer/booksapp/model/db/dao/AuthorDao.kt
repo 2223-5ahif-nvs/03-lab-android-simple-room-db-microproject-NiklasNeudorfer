@@ -17,7 +17,6 @@ interface AuthorDao {
     fun findByName(fullName: String): Author?
 
 
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(author: Author)
 
