@@ -1,0 +1,17 @@
+= Simple RoomDB Example
+Neudorfer Niklas
+1.0.0, 2022-12-15
+ifndef::imagesdir[:imagesdir: .]
+//:toc-placement!:
+:sourcedir: ../src/main/java
+:icons: font
+:sectnums:
+:toc: left
+
+//Need this blank line after ifdef, don't know why...
+ifdef::backend-html5[]
+
+// print the toc here (not at the default position)
+//toc::[]
+
+== Work in progress

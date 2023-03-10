@@ -24,11 +24,17 @@ ifdef::backend-html5[]
 
 * link:guides/guideForTest.adoc[Test Cheatsheet]
 
+* link:guides/roomdb.adoc[RoomDB + Dagger-Hilt Guide]
+
 == States
 
-* link:states/state_15_12_2022.adoc[Current State]
+* link:states/state_10_03_2023.adoc[State 10.03.2023]
 
-* link:states/state_25_11_2022.adoc[State 15.12.2022]
+* link:states/state_14_01_2023.adoc[State 14.01.2023]
+
+* link:states/state_15_12_2022.adoc[State 15.12.2022]
+
+* link:states/state_25_11_2022.adoc[State 25.11.2022]
 
 == Folder Structure
 
@@ -59,11 +65,14 @@ ifdef::backend-html5[]
 docu - ...
 frontend - ...
 backend - ...
+<technology> - ...
 -----
 
 * e.g
 ** `docu - added new documentation for the frontend`
 ** `frontend - added detail Screen`
+*** `retrofit - get data from backend via API`
+*** `roomdb - added annotations for roomdb to entity`
 ** `backend - added new endpoint for getting data`
 
 == Source
