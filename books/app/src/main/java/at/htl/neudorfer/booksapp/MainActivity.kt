@@ -14,18 +14,22 @@ import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.ui.authors.AuthorsListScreen
 import at.htl.neudorfer.booksapp.ui.authors.AuthorsViewModel
 import at.htl.neudorfer.booksapp.ui.books.BookList
+import at.htl.neudorfer.booksapp.ui.favouriteAuthors.FavouriteAuthorItem
+import at.htl.neudorfer.booksapp.ui.favouriteAuthors.FavouriteAuthorsListScreen
+import at.htl.neudorfer.booksapp.ui.favouriteAuthors.FavouriteAuthorsViewModel
 import at.htl.neudorfer.booksapp.ui.theme.BooksTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel: AuthorsViewModel by viewModels()
+    private val authorVM: AuthorsViewModel by viewModels()
+    private val favAuthorVM: FavouriteAuthorsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             BooksTheme {
-                Tabs(viewModel)
+                Tabs(authorVM, favAuthorVM)
             }
         }
     }
@@ -36,10 +40,10 @@ class MainActivity : ComponentActivity() {
 // https://www.rockandnull.com/jetpack-compose-swipe-pager/
 
 @Composable
-fun Tabs(viewModel: AuthorsViewModel) {
+fun Tabs(authorsVM: AuthorsViewModel, favouriteAuthorsVM: FavouriteAuthorsViewModel) {
     var tabIndex by remember { mutableStateOf(0) }
 
-    val tabTitles = listOf("Books", "Authors")
+    val tabTitles = listOf("Books", "Authors", "Liked")
     Column {
         TabRow(selectedTabIndex = tabIndex) {
             tabTitles.forEachIndexed { index, title ->
@@ -50,8 +54,8 @@ fun Tabs(viewModel: AuthorsViewModel) {
         }
         when (tabIndex) {
             0 -> BookList()
-            1 -> AuthorsListScreen(viewModel)
-            //2 -> Text(text = "${library_db.authorDao().getAll().map { it.fullName }}")
+            1 -> AuthorsListScreen(authorsVM)
+            2 -> FavouriteAuthorsListScreen(favouriteAuthorsVM)
         }
     }
 }
