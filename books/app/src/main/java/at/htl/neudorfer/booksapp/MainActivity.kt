@@ -3,21 +3,29 @@ package at.htl.neudorfer.booksapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Button
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.ui.authors.AuthorsListScreen
+import at.htl.neudorfer.booksapp.ui.authors.AuthorsViewModel
 import at.htl.neudorfer.booksapp.ui.books.BookList
 import at.htl.neudorfer.booksapp.ui.theme.BooksTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val viewModel: AuthorsViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             BooksTheme {
-                Tabs()
+                Tabs(viewModel)
             }
         }
     }
@@ -28,7 +36,7 @@ class MainActivity : ComponentActivity() {
 // https://www.rockandnull.com/jetpack-compose-swipe-pager/
 
 @Composable
-fun Tabs() {
+fun Tabs(viewModel: AuthorsViewModel) {
     var tabIndex by remember { mutableStateOf(0) }
 
     val tabTitles = listOf("Books", "Authors")
@@ -42,7 +50,8 @@ fun Tabs() {
         }
         when (tabIndex) {
             0 -> BookList()
-            1 -> AuthorsListScreen()
+            1 -> AuthorsListScreen(viewModel)
+            //2 -> Text(text = "${library_db.authorDao().getAll().map { it.fullName }}")
         }
     }
 }

@@ -7,33 +7,33 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import at.htl.neudorfer.booksapp.data.Author
-import at.htl.neudorfer.booksapp.ui.theme.BooksTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @Composable
-fun AuthorsListScreen() {
-    val viewModel: AuthorsViewModel = viewModel();
+fun AuthorsListScreen(viewModel: AuthorsViewModel) {
+    //val viewModel: AuthorsViewModel = hiltViewModel();
+    //private val viewModel: AuthorsViewModel by viewModels()
     val authors = viewModel.authorsState.value
 
-    LazyColumn(){
+    LazyColumn() {
         items(authors) { author ->
-            AuthorItem(author)
+            AuthorItem(author, viewModel)
         }
     }
 
 }
 
 @Composable
-fun AuthorItem(author: Author) {
+fun AuthorItem(author: Author, viewModel: AuthorsViewModel) {
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = 2.dp,
@@ -55,15 +55,21 @@ fun AuthorItem(author: Author) {
                     .padding(16.dp)
             ) {
                 Text(text = author.fullName)
+
+                Button(onClick = {
+                    viewModel.addAuthor(author)
+                }) {
+                    Text("Add to Favorites")
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    BooksTheme() {
-        AuthorsListScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    BooksTheme() {
+//        AuthorsListScreen()
+//    }
+//}
