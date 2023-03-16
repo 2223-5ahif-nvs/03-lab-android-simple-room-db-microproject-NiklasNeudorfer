@@ -7,7 +7,7 @@
 <meta name="generator" content="Asciidoctor 2.0.18">
 <meta name="author" content="Neudorfer Niklas">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Microproject - Neudorfer 22/23</title>
+<title>Cheatsheet for (maybe last) NVS Test</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -555,163 +555,401 @@ pre.rouge .gs {
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Microproject - Neudorfer 22/23</h1>
+<h1>Cheatsheet for (maybe last) NVS Test</h1>
 <div class="details">
 <span id="author" class="author">Neudorfer Niklas</span><br>
 <span id="revnumber">version 1.0.0,</span>
-<span id="revdate">2022-12-15</span>
+<span id="revdate">2022-01-12</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_introduction">1. Introduction</a></li>
-<li><a href="#_documentation_guides">2. Documentation / Guides</a></li>
-<li><a href="#_states">3. States</a></li>
-<li><a href="#_folder_structure">4. Folder Structure</a></li>
-<li><a href="#_commit_guidelines">5. Commit Guidelines</a></li>
-<li><a href="#_source">6. Source</a></li>
+<li><a href="#_requirements_versions">1. Requirements / Versions</a>
+<ul class="sectlevel2">
+<li><a href="#_versions">1.1. Versions</a></li>
+<li><a href="#_source">1.2. Source</a></li>
+</ul>
+</li>
+<li><a href="#_app">2. App</a>
+<ul class="sectlevel2">
+<li><a href="#_apiservice">2.1. ApiService</a></li>
+<li><a href="#_repository">2.2. Repository</a></li>
+<li><a href="#_viewmodel">2.3. ViewModel</a></li>
+<li><a href="#_screen">2.4. Screen</a></li>
+</ul>
+</li>
+<li><a href="#_common_problems">3. Common Problems</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_introduction"><a class="anchor" href="#_introduction"></a>1. Introduction</h2>
+<h2 id="_requirements_versions"><a class="anchor" href="#_requirements_versions"></a>1. Requirements / Versions</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_versions"><a class="anchor" href="#_versions"></a>1.1. Versions</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>this is the Microproject from me, Neudorfer Niklas <em>alias</em> <mark>Avatar</mark> from the 5AHIF</p>
+<p>In my example I am using the following versions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Kotlin</strong>: 1.7.20</p>
+</li>
+<li>
+<p><strong>Kotlin-Compiler</strong>: 1.3.2</p>
+</li>
+<li>
+<p><strong>Compose UI</strong> Version: 1.3.2</p>
+</li>
+<li>
+<p>compile + target <strong>Sdk</strong>: 33</p>
 </li>
 </ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_source"><a class="anchor" href="#_source"></a>1.2. Source</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Don&#8217;t just copy!
+Stuff like e.g. the namespace won&#8217;t work for you.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<details>
+<summary class="title">build.gradle(books)</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">buildscript</span> <span class="o">{</span>
+    <span class="n">ext</span> <span class="o">{</span>
+        <span class="n">compose_ui_version</span> <span class="o">=</span> <span class="s1">'1.3.2'</span>
+    <span class="o">}</span>
+<span class="o">}</span><span class="c1">// Top-level build file where you can add configuration options common to all sub-projects/modules.</span>
+<span class="n">plugins</span> <span class="o">{</span>
+    <span class="n">id</span> <span class="s1">'com.android.application'</span> <span class="n">version</span> <span class="s1">'7.3.1'</span> <span class="n">apply</span> <span class="kc">false</span>
+    <span class="n">id</span> <span class="s1">'com.android.library'</span> <span class="n">version</span> <span class="s1">'7.3.1'</span> <span class="n">apply</span> <span class="kc">false</span>
+    <span class="n">id</span> <span class="s1">'org.jetbrains.kotlin.android'</span> <span class="n">version</span> <span class="s1">'1.7.20'</span> <span class="n">apply</span> <span class="kc">false</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">build.gradle(:app)</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">plugins</span> <span class="o">{</span>
+    <span class="n">id</span> <span class="s1">'com.android.application'</span>
+    <span class="n">id</span> <span class="s1">'org.jetbrains.kotlin.android'</span>
+<span class="o">}</span>
+
+<span class="n">android</span> <span class="o">{</span>
+    <span class="n">namespace</span> <span class="s1">'at.htl.neudorfer.booksapp'</span>
+    <span class="n">compileSdk</span> <span class="mi">33</span>
+
+    <span class="n">defaultConfig</span> <span class="o">{</span>
+        <span class="n">applicationId</span> <span class="s2">"at.htl.neudorfer.booksapp"</span>
+        <span class="n">minSdk</span> <span class="mi">21</span>
+        <span class="n">targetSdk</span> <span class="mi">33</span>
+        <span class="n">versionCode</span> <span class="mi">1</span>
+        <span class="n">versionName</span> <span class="s2">"1.0"</span>
+
+        <span class="n">testInstrumentationRunner</span> <span class="s2">"androidx.test.runner.AndroidJUnitRunner"</span>
+        <span class="n">vectorDrawables</span> <span class="o">{</span>
+            <span class="n">useSupportLibrary</span> <span class="kc">true</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="n">buildTypes</span> <span class="o">{</span>
+        <span class="n">release</span> <span class="o">{</span>
+            <span class="n">minifyEnabled</span> <span class="kc">false</span>
+            <span class="n">proguardFiles</span> <span class="nf">getDefaultProguardFile</span><span class="o">(</span><span class="s1">'proguard-android-optimize.txt'</span><span class="o">),</span> <span class="s1">'proguard-rules.pro'</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="n">compileOptions</span> <span class="o">{</span>
+        <span class="n">sourceCompatibility</span> <span class="n">JavaVersion</span><span class="o">.</span><span class="na">VERSION_1_8</span>
+        <span class="n">targetCompatibility</span> <span class="n">JavaVersion</span><span class="o">.</span><span class="na">VERSION_1_8</span>
+    <span class="o">}</span>
+    <span class="n">kotlinOptions</span> <span class="o">{</span>
+        <span class="n">jvmTarget</span> <span class="o">=</span> <span class="s1">'1.8'</span>
+    <span class="o">}</span>
+    <span class="n">buildFeatures</span> <span class="o">{</span>
+        <span class="n">compose</span> <span class="kc">true</span>
+    <span class="o">}</span>
+    <span class="n">composeOptions</span> <span class="o">{</span>
+        <span class="n">kotlinCompilerExtensionVersion</span> <span class="s1">'1.3.2'</span>
+    <span class="o">}</span>
+    <span class="n">packagingOptions</span> <span class="o">{</span>
+        <span class="n">resources</span> <span class="o">{</span>
+            <span class="n">excludes</span> <span class="o">+=</span> <span class="s1">'/META-INF/{AL2.0,LGPL2.1}'</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">dependencies</span> <span class="o">{</span>
+
+    <span class="n">implementation</span> <span class="s1">'androidx.core:core-ktx:1.7.0'</span>
+    <span class="n">implementation</span> <span class="s1">'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'</span>
+    <span class="n">implementation</span> <span class="s1">'androidx.activity:activity-compose:1.3.1'</span>
+    <span class="n">implementation</span> <span class="s2">"androidx.compose.ui:ui:$compose_ui_version"</span>
+    <span class="n">implementation</span> <span class="s2">"androidx.compose.ui:ui-tooling-preview:$compose_ui_version"</span>
+    <span class="n">implementation</span> <span class="s1">'androidx.compose.material:material:1.1.1'</span>
+    <span class="n">testImplementation</span> <span class="s1">'junit:junit:4.13.2'</span>
+    <span class="n">androidTestImplementation</span> <span class="s1">'androidx.test.ext:junit:1.1.4'</span>
+    <span class="n">androidTestImplementation</span> <span class="s1">'androidx.test.espresso:espresso-core:3.5.0'</span>
+    <span class="n">androidTestImplementation</span> <span class="s2">"androidx.compose.ui:ui-test-junit4:$compose_ui_version"</span>
+    <span class="n">debugImplementation</span> <span class="s2">"androidx.compose.ui:ui-tooling:$compose_ui_version"</span>
+    <span class="n">debugImplementation</span> <span class="s2">"androidx.compose.ui:ui-test-manifest:$compose_ui_version"</span>
+
+    <span class="n">implementation</span> <span class="s1">'com.squareup.retrofit2:retrofit:2.9.0'</span>
+    <span class="n">implementation</span> <span class="s1">'com.squareup.okhttp3:okhttp:5.0.0-alpha.10'</span>
+    <span class="n">implementation</span> <span class="s1">'com.squareup.retrofit2:converter-gson:2.9.0'</span>
+
+    <span class="n">implementation</span> <span class="s1">'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'</span>
+
+    <span class="n">implementation</span> <span class="s2">"io.coil-kt:coil-compose:2.2.2"</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+</div>
+</details>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_documentation_guides"><a class="anchor" href="#_documentation_guides"></a>2. Documentation / Guides</h2>
+<h2 id="_app"><a class="anchor" href="#_app"></a>2. App</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="guides/retrofit.adoc">Retrofit Guide</a></p>
-</li>
-<li>
-<p><a href="guides/guideForTest.adoc">Test Cheatsheet</a></p>
-</li>
-<li>
-<p><a href="guides/roomdb.adoc">RoomDB + Dagger-Hilt Guide</a></p>
-</li>
-</ul>
+<div class="paragraph">
+<p>This is my interpretation how the app normally works:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/diagram-classes.png" alt="diagram classes" width="351" height="469">
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Disclaimer!</p>
+</div>
+<div class="paragraph">
+<p>It can be that I implemented some things on a different way than Prof. Stuetz in his latest Guide, about the Mealz App, he showed us.
+I don&#8217;t think there&#8217;s a big difference, but it is important to know that it doesn&#8217;t have to be everything 100% correct, but it worked in my demo :D</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_apiservice"><a class="anchor" href="#_apiservice"></a>2.1. ApiService</h3>
+<div class="paragraph">
+<p>In my case the ApiService is a interface.</p>
+</div>
+<div class="paragraph">
+<p>The Part which defines the Endpoint where you can get data are functions which have the annotation <code>@GET(&lt;url&gt;)</code> and are returning the "correct" data, for example:  <code>List&lt; &lt;Response&gt; &gt;</code>.
+<mark>Don&#8217;t forget</mark> to add the <code>suspend</code> Keyword in front of the function!</p>
+</div>
+<div class="paragraph">
+<p>The Important Part, which defines where the Endpoint is, and how the Data should be parsed is in a companion object.
+A companion object is basically a Singleton Object, and it should look something like the following</p>
+</div>
+<div class="listingblock">
+<div class="title">ApiService - Companion Object</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin">    <span class="k">companion</span> <span class="k">object</span><span class="p">{</span>
+        <span class="k">private</span> <span class="kd">var</span> <span class="py">apiService</span><span class="p">:</span> <span class="nc">ApiService</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+        <span class="k">fun</span> <span class="nf">getInstance</span><span class="p">():</span> <span class="nc">ApiService</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">apiService</span> <span class="p">==</span> <span class="k">null</span><span class="p">){</span>
+                <span class="n">apiService</span> <span class="p">=</span> <span class="nc">Retrofit</span><span class="p">.</span><span class="nc">Builder</span><span class="p">()</span>
+                    <span class="p">.</span><span class="nf">baseUrl</span><span class="p">(</span><span class="s">"&lt;url&gt;"</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">addConverterFactory</span><span class="p">(</span><span class="nc">GsonConverterFactory</span><span class="p">.</span><span class="nf">create</span><span class="p">())</span>
+                    <span class="p">.</span><span class="nf">build</span><span class="p">()</span>
+                    <span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="nc">ApiService</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">apiService</span><span class="o">!!</span>
+        <span class="p">}</span>
+    <span class="p">}</span></code></pre>
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_states"><a class="anchor" href="#_states"></a>3. States</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="states/state_10_03_2023.adoc">State 10.03.2023</a></p>
-</li>
-<li>
-<p><a href="states/state_14_01_2023.adoc">State 14.01.2023</a></p>
-</li>
-<li>
-<p><a href="states/state_15_12_2022.adoc">State 15.12.2022</a></p>
-</li>
-<li>
-<p><a href="states/state_25_11_2022.adoc">State 25.11.2022</a></p>
-</li>
-</ul>
+<div class="sect2">
+<h3 id="_repository"><a class="anchor" href="#_repository"></a>2.2. Repository</h3>
+<div class="paragraph">
+<p>The Repository is really simple, it just calls the ApiService and returns the Data.</p>
+</div>
+<div class="paragraph">
+<p>The ApiService is provided as a Parameter, but so you don&#8217;t have to create a new ApiService you can set the <strong>default value</strong> to the previously created function called <code>getInstance()</code>.</p>
+</div>
+<div class="paragraph">
+<p>The only thing you have to do now is to add functions (with the suspend Keyword!!) which calls the ApiService and returns the Data.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_viewmodel"><a class="anchor" href="#_viewmodel"></a>2.3. ViewModel</h3>
+<div class="paragraph">
+<p>The ViewModel is also really simple, it just calls the Repository and sets the Data to a list.</p>
 </div>
-<div class="sect1">
-<h2 id="_folder_structure"><a class="anchor" href="#_folder_structure"></a>4. Folder Structure</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>because the names can be a bit confusing here is a short explanation of the folder structure.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>To Tell Android that your <code>ViewModel</code> is a <code>ViewModel</code> you have to make it inherit  <code>ViewModel()</code></p>
+</div>
+<div class="listingblock">
+<div class="title">ViewModel</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin">    <span class="kd">val</span> <span class="py">TAG</span> <span class="p">=</span> <span class="nc">AuthorsViewModel</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">.</span><span class="n">name</span><span class="p">;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+
+    <span class="nf">init</span> <span class="p">{</span>
+        <span class="n">viewModelScope</span><span class="p">.</span><span class="nf">launch</span> <span class="p">{</span>
+            <span class="kd">val</span> <span class="py">data</span> <span class="p">=</span> <span class="nf">getData</span><span class="p">()</span> <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="nc">Log</span><span class="p">.</span><span class="nf">d</span><span class="p">(</span><span class="nc">TAG</span><span class="p">,</span> <span class="s">"Data: $data"</span><span class="p">)</span>
+            <span class="n">dataState</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> <span class="n">data</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">val</span> <span class="py">dataState</span><span class="p">:</span> <span class="nc">MutableState</span><span class="p">&lt;</span><span class="nc">List</span><span class="p">&lt;</span><span class="nc">Data</span><span class="p">&gt;&gt;</span> <span class="p">=</span> <span class="nf">mutableStateOf</span><span class="p">((</span><span class="n">emptyList</span><span class="p">&lt;</span><span class="nc">Data</span><span class="p">&gt;()))</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The Tag is used for Logging.
+It is a good practice to use the name of the class as Tag, so you know where something got logged from just looking at the logs.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>This is where you should call your Data from the Repository.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Now when you want to access the Data from your Screen (or MainActivity) you have to use <code>viewModel.dataState.value</code></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_screen"><a class="anchor" href="#_screen"></a>2.4. Screen</h3>
+<div class="paragraph">
+<p>The Screen is the View of your App, it is the part where you can see the Data.
+In this case the Screen is a <code>@Composable</code> Function, which is called in the MainActivity.</p>
+</div>
+<div class="paragraph">
+<p>This is how you can get your Data from the ViewModel.
+And display it in a list as an example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>.
-├── books
-│   ├── Frontend
-│   └── with Jetpack-Compose
-├── library
-│   ├── Backend
-│   └── with Quarkus, for getting data
-├── docs
-│   ├── AsciiDoc
-│   ├── documentation
-│   └── location for screenshots &amp; images
-└── README.adoc</code></pre>
+<pre class="rouge highlight"><code data-lang="kotlin">    <span class="kd">val</span> <span class="py">viewModel</span><span class="p">:</span> <span class="nc">DataViewModel</span> <span class="p">=</span> <span class="nf">viewModel</span><span class="p">();</span>
+    <span class="kd">val</span> <span class="py">data</span> <span class="p">=</span> <span class="n">viewModel</span><span class="p">.</span><span class="n">dataState</span><span class="p">.</span><span class="n">value</span>
+
+    <span class="nc">LazyColumn</span><span class="p">(){</span>
+        <span class="nf">items</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span> <span class="n">d</span> <span class="p">-&gt;</span>
+            <span class="nc">Datatem</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span></code></pre>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_commit_guidelines"><a class="anchor" href="#_commit_guidelines"></a>5. Commit Guidelines</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>For the future commits I want to use the following guidelines:</p>
-</li>
-</ul>
 </div>
 <div class="listingblock">
+<div class="title">Simple way for Displaying the Data:</div>
 <div class="content">
-<pre class="rouge highlight"><code>docu - ...
-frontend - ...
-backend - ...
-&lt;technology&gt; - ...</code></pre>
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nc">Text</span><span class="p">(</span><span class="n">text</span> <span class="p">=</span> <span class="n">data</span><span class="p">.</span><span class="n">name</span><span class="p">)</span></code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>e.g</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>docu - added new documentation for the frontend</code></p>
-</li>
-<li>
-<p><code>frontend - added detail Screen</code></p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>retrofit - get data from backend via API</code></p>
-</li>
-<li>
-<p><code>roomdb - added annotations for roomdb to entity</code></p>
-</li>
-</ul>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In most cases it would be smarter to first just display the data in a simple way.
+And only after that works you can take your time and make it look nice.
+</td>
+</tr>
+</table>
 </div>
-</li>
-<li>
-<p><code>backend - added new endpoint for getting data</code></p>
-</li>
-</ul>
+<div class="paragraph">
+<p>But when you are far enough to make it look nice, you can use the following code to make it look nice.
+In the composable you can e.g. make a <code>Card</code> with a plain <code>Row</code> inside of it, and inside of the <code>Row</code> you can add a <code>AsyncImage</code> (with model = url of the image) or a <code>Column</code> in which you can display the Data as a simple <code>Text()</code>.</p>
 </div>
-</li>
-</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_source"><a class="anchor" href="#_source"></a>6. Source</h2>
+<h2 id="_common_problems"><a class="anchor" href="#_common_problems"></a>3. Common Problems</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://www.udemy.com/course/to-do-app-with-jetpack-compose-mvvm-android-development/learn/lecture/27993710#overview">Udemy Course</a></p>
-</li>
-</ul>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You have to add <code>android:usesCleartextTraffic="true"</code> to your Manifest, otherwise the communication between your Android App and the local Quarkus Backend won&#8217;t work.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In order to access your "localhost" you have to use <code><a href="http://10.0.2.2:8080/" class="bare">http://10.0.2.2:8080/</a></code>.
+This is because the Android Emulator, which is running on your computer, is not able to access your localhost.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>By Default the Android Emulator is not able to access the Internet.
+You have to enable it like the following: <code>&lt;uses-permission android:name="android.permission.INTERNET" /&gt;</code> in your Manifest</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

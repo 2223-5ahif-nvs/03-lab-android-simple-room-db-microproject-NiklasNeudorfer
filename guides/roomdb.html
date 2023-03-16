@@ -7,7 +7,7 @@
 <meta name="generator" content="Asciidoctor 2.0.18">
 <meta name="author" content="Neudorfer Niklas">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Simple Retrofit REST API Example</title>
+<title>Simple RoomDB Example</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -555,7 +555,7 @@ pre.rouge .gs {
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Simple Retrofit REST API Example</h1>
+<h1>Simple RoomDB Example</h1>
 <div class="details">
 <span id="author" class="author">Neudorfer Niklas</span><br>
 <span id="revnumber">version 1.0.0,</span>
@@ -567,19 +567,24 @@ pre.rouge .gs {
 <li><a href="#_files_we_will_be_working_with">1. Files we will be working with:</a></li>
 <li><a href="#_dependencies_versions">2. Dependencies &amp; Versions</a>
 <ul class="sectlevel2">
-<li><a href="#_retrofit_dependencies">2.1. Retrofit dependencies</a></li>
-<li><a href="#_versions">2.2. Versions</a></li>
-<li><a href="#_source">2.3. Source</a></li>
+<li><a href="#_roomdb_dependencies">2.1. RoomDB dependencies</a></li>
+<li><a href="#_dagger_hilt_dependencies">2.2. Dagger-Hilt dependencies</a></li>
+<li><a href="#_versions">2.3. Versions</a></li>
+<li><a href="#_source">2.4. Source</a></li>
 </ul>
 </li>
 <li><a href="#_entity">3. Entity</a></li>
-<li><a href="#_apiservice">4. ApiService</a>
+<li><a href="#_dao">4. DAO</a></li>
+<li><a href="#_database">5. Database</a></li>
+<li><a href="#_dagger_hilt_module">6. Dagger-Hilt Module</a></li>
+<li><a href="#_repository">7. Repository</a></li>
+<li><a href="#_dagger_hilt_base_application">8. Dagger-Hilt Base Application</a>
 <ul class="sectlevel2">
-<li><a href="#_accessing_data_from_an_endpoint">4.1. Accessing Data from an Endpoint</a></li>
+<li><a href="#_manifest">8.1. Manifest</a></li>
 </ul>
 </li>
-<li><a href="#_mainviewmodel">5. MainViewModel</a></li>
-<li><a href="#_mainactivity">6. MainActivity</a></li>
+<li><a href="#_mainactivity">9. MainActivity</a></li>
+<li><a href="#_access_db_from_composable">10. Access DB from Composable</a></li>
 </ul>
 </div>
 </div>
@@ -589,16 +594,24 @@ pre.rouge .gs {
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>.
-├── at.htl.books
-│   ├── data
-│   │   ├── Book <i class="conum" data-value="1"></i><b>(1)</b>
-│   │   └──  ...
-│   ├── ui
-│   │   └── ...
-│   ├── MainActivity <i class="conum" data-value="2"></i><b>(2)</b>
-│   └── MainViewModel <i class="conum" data-value="3"></i><b>(3)</b>
-└── ApiService <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+<pre class="rouge highlight"><code>at.htl.neudorfer.booksapp
+├── data
+│   ├── Author <i class="conum" data-value="1"></i><b>(1)</b>
+│   └──  ...
+├── model
+│   ├── api
+│   ├── db
+│   │   ├── dao
+│   │   │   ├── AuthorDao <i class="conum" data-value="2"></i><b>(2)</b>
+│   │   │   └── ...
+│   │   ├── AppDatabase <i class="conum" data-value="3"></i><b>(3)</b>
+│   │   └── AppModule <i class="conum" data-value="4"></i><b>(4)</b>
+│   ├── AuthorRepository <i class="conum" data-value="5"></i><b>(5)</b>
+│   └── ...
+├── ui
+│   └── ...
+├── BaseApplication <i class="conum" data-value="6"></i><b>(6)</b>
+└── MainActivity <i class="conum" data-value="7"></i><b>(7)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -609,15 +622,27 @@ pre.rouge .gs {
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>MainActivity</strong></td>
+<td><strong>DAOs</strong></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td><strong>MainViewModel</strong></td>
+<td><strong>Database</strong> class</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td><strong>ApiService</strong></td>
+<td>Dagger-Hilt <strong>Module</strong> class</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Repositories</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Dagger-Hilt <strong>BaseApplication</strong></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td><strong>MainActivity</strong></td>
 </tr>
 </table>
 </div>
@@ -627,22 +652,42 @@ pre.rouge .gs {
 <h2 id="_dependencies_versions"><a class="anchor" href="#_dependencies_versions"></a>2. Dependencies &amp; Versions</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_retrofit_dependencies"><a class="anchor" href="#_retrofit_dependencies"></a>2.1. Retrofit dependencies</h3>
+<h3 id="_roomdb_dependencies"><a class="anchor" href="#_roomdb_dependencies"></a>2.1. RoomDB dependencies</h3>
 <div class="paragraph">
 <p>We need to add the following dependencies to our <strong>build.gradle</strong>(:app) file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="groovy">    <span class="n">implementation</span> <span class="s1">'com.squareup.retrofit2:retrofit:2.9.0'</span>
-    <span class="n">implementation</span> <span class="s1">'com.squareup.okhttp3:okhttp:5.0.0-alpha.10'</span>
-    <span class="n">implementation</span> <span class="s1">'com.squareup.retrofit2:converter-gson:2.9.0'</span>
+<pre class="rouge highlight"><code data-lang="groovy">    <span class="c1">//-------------------------------------------------------</span>
+    <span class="c1">//      ROOM -- Database</span>
+    <span class="c1">//-------------------------------------------------------</span>
+    <span class="kt">def</span> <span class="n">room_version</span> <span class="o">=</span> <span class="s2">"2.4.3"</span>
 
-    <span class="n">implementation</span> <span class="s2">"io.coil-kt:coil-compose:2.2.2"</span></code></pre>
+    <span class="n">implementation</span> <span class="s2">"androidx.room:room-runtime:2.4.3"</span>
+    <span class="n">kapt</span> <span class="s2">"androidx.room:room-compiler:2.4.3"</span>
+    <span class="n">implementation</span> <span class="s2">"androidx.room:room-ktx:2.4.3"</span>
+
+    <span class="c1">// Datastore preferences</span>
+    <span class="n">implementation</span> <span class="s2">"androidx.datastore:datastore-preferences:1.0.0"</span></code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_versions"><a class="anchor" href="#_versions"></a>2.2. Versions</h3>
+<h3 id="_dagger_hilt_dependencies"><a class="anchor" href="#_dagger_hilt_dependencies"></a>2.2. Dagger-Hilt dependencies</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="groovy">    <span class="c1">//-------------------------------------------------------</span>
+    <span class="c1">//      Dagger Hilt -- Dependency Injection</span>
+    <span class="c1">//-------------------------------------------------------</span>
+
+    <span class="n">implementation</span> <span class="s2">"com.google.dagger:hilt-android:2.40.5"</span>
+    <span class="n">kapt</span> <span class="s2">"com.google.dagger:hilt-android-compiler:2.40.5"</span>
+    <span class="n">implementation</span> <span class="s2">"androidx.hilt:hilt-navigation-compose:1.0.0"</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_versions"><a class="anchor" href="#_versions"></a>2.3. Versions</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -668,7 +713,7 @@ pre.rouge .gs {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_source"><a class="anchor" href="#_source"></a>2.3. Source</h3>
+<h3 id="_source"><a class="anchor" href="#_source"></a>2.4. Source</h3>
 <details>
 <summary class="title">build.gradle(books)</summary>
 <div class="content">
@@ -677,6 +722,9 @@ pre.rouge .gs {
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">buildscript</span> <span class="o">{</span>
     <span class="n">ext</span> <span class="o">{</span>
         <span class="n">compose_ui_version</span> <span class="o">=</span> <span class="s1">'1.3.2'</span>
+    <span class="o">}</span>
+    <span class="n">dependencies</span> <span class="o">{</span>
+        <span class="n">classpath</span> <span class="s2">"com.google.dagger:hilt-android-gradle-plugin:2.42"</span>
     <span class="o">}</span>
 <span class="o">}</span><span class="c1">// Top-level build file where you can add configuration options common to all sub-projects/modules.</span>
 <span class="n">plugins</span> <span class="o">{</span>
@@ -696,14 +744,16 @@ pre.rouge .gs {
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">plugins</span> <span class="o">{</span>
     <span class="n">id</span> <span class="s1">'com.android.application'</span>
     <span class="n">id</span> <span class="s1">'org.jetbrains.kotlin.android'</span>
+    <span class="n">id</span> <span class="s1">'kotlin-kapt'</span>
+    <span class="n">id</span> <span class="s1">'dagger.hilt.android.plugin'</span>
 <span class="o">}</span>
 
 <span class="n">android</span> <span class="o">{</span>
-    <span class="n">namespace</span> <span class="s1">'at.htl.neudorfer.books'</span>
+    <span class="n">namespace</span> <span class="s1">'at.htl.neudorfer.booksapp'</span>
     <span class="n">compileSdk</span> <span class="mi">33</span>
 
     <span class="n">defaultConfig</span> <span class="o">{</span>
-        <span class="n">applicationId</span> <span class="s2">"at.htl.neudorfer.books"</span>
+        <span class="n">applicationId</span> <span class="s2">"at.htl.neudorfer.booksapp"</span>
         <span class="n">minSdk</span> <span class="mi">21</span>
         <span class="n">targetSdk</span> <span class="mi">33</span>
         <span class="n">versionCode</span> <span class="mi">1</span>
@@ -756,11 +806,46 @@ pre.rouge .gs {
     <span class="n">debugImplementation</span> <span class="s2">"androidx.compose.ui:ui-tooling:$compose_ui_version"</span>
     <span class="n">debugImplementation</span> <span class="s2">"androidx.compose.ui:ui-test-manifest:$compose_ui_version"</span>
 
+
+    <span class="c1">//-------------------------------------------------------</span>
+    <span class="c1">//      RETROFIT -- API</span>
+    <span class="c1">//-------------------------------------------------------</span>
     <span class="n">implementation</span> <span class="s1">'com.squareup.retrofit2:retrofit:2.9.0'</span>
     <span class="n">implementation</span> <span class="s1">'com.squareup.okhttp3:okhttp:5.0.0-alpha.10'</span>
     <span class="n">implementation</span> <span class="s1">'com.squareup.retrofit2:converter-gson:2.9.0'</span>
 
+    <span class="n">implementation</span> <span class="s1">'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'</span>
+
+    <span class="c1">//-------------------------------------------------------</span>
+    <span class="c1">//      COIL</span>
+    <span class="c1">//-------------------------------------------------------</span>
     <span class="n">implementation</span> <span class="s2">"io.coil-kt:coil-compose:2.2.2"</span>
+
+
+    <span class="c1">//-------------------------------------------------------</span>
+    <span class="c1">//      Dagger Hilt -- Dependency Injection</span>
+    <span class="c1">//-------------------------------------------------------</span>
+
+    <span class="n">implementation</span> <span class="s2">"com.google.dagger:hilt-android:2.40.5"</span>
+    <span class="n">kapt</span> <span class="s2">"com.google.dagger:hilt-android-compiler:2.40.5"</span>
+    <span class="n">implementation</span> <span class="s2">"androidx.hilt:hilt-navigation-compose:1.0.0"</span>
+
+    <span class="c1">//-------------------------------------------------------</span>
+    <span class="c1">//      ROOM -- Database</span>
+    <span class="c1">//-------------------------------------------------------</span>
+    <span class="kt">def</span> <span class="n">room_version</span> <span class="o">=</span> <span class="s2">"2.4.3"</span>
+
+
+    <span class="n">implementation</span> <span class="s2">"androidx.room:room-runtime:2.4.3"</span>
+    <span class="n">kapt</span> <span class="s2">"androidx.room:room-compiler:2.4.3"</span>
+    <span class="n">implementation</span> <span class="s2">"androidx.room:room-ktx:2.4.3"</span>
+
+    <span class="c1">// Datastore preferences</span>
+    <span class="n">implementation</span> <span class="s2">"androidx.datastore:datastore-preferences:1.0.0"</span>
+<span class="o">}</span>
+
+<span class="n">kapt</span> <span class="o">{</span>
+    <span class="n">correctErrorTypes</span> <span class="o">=</span> <span class="kc">true</span>
 <span class="o">}</span></code></pre>
 </div>
 </div>
@@ -775,37 +860,148 @@ pre.rouge .gs {
 <div class="ulist">
 <ul>
 <li>
-<p>For the Entities we will be using <strong>data classes</strong>, so we don&#8217;t have to write boilerplate code. (data class automatically generates getters, setters, &#8230;&#8203;)</p>
+<p>The Entities need to be annotated with <code>@Entity</code> &amp; the primary key with <code>@PrimaryKey</code>.</p>
+</li>
+<li>
+<p>For the <code>@PrimaryKey</code> you can use the <code>autoGenerate = true</code> to let the database generate the id for you.</p>
+</li>
+<li>
+<p>The <code>@ColumnInfo</code> annotation is optional, but you can use it to specify the name of the column in the database.</p>
 </li>
 </ul>
 </div>
 <div class="listingblock">
-<div class="title">Book Class</div>
+<div class="title">Author Class</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="kotlin"><span class="kd">data class</span> <span class="nc">Book</span><span class="p">(</span>
-    <span class="kd">val</span> <span class="py">title</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span>
-    <span class="kd">val</span> <span class="py">description</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span>
-    <span class="kd">val</span> <span class="py">coverUrl</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span>
-    <span class="kd">val</span> <span class="py">genre</span><span class="p">:</span> <span class="nc">Genre</span><span class="p">,</span>
-    <span class="kd">val</span> <span class="py">author</span><span class="p">:</span> <span class="nc">Author</span>
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nd">@Entity</span><span class="p">(</span><span class="n">tableName</span> <span class="p">=</span> <span class="s">"authors"</span><span class="p">)</span>
+<span class="kd">data class</span> <span class="nc">Author</span><span class="p">(</span>
+    <span class="nd">@ColumnInfo</span><span class="p">(</span><span class="n">name</span> <span class="p">=</span> <span class="s">"full_name"</span><span class="p">)</span> <span class="kd">val</span> <span class="py">fullName</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span>
+    <span class="nd">@PrimaryKey</span><span class="p">(</span><span class="n">autoGenerate</span> <span class="p">=</span> <span class="k">true</span><span class="p">)</span> <span class="kd">val</span> <span class="py">id</span><span class="p">:</span> <span class="nc">Int</span> <span class="p">?</span> <span class="p">=</span> <span class="p">-</span><span class="mi">1</span>
 <span class="p">)</span></code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dao"><a class="anchor" href="#_dao"></a>4. DAO</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The DAO is the interface where you define the methods to access the database.</p>
+</li>
+<li>
+<p>The DAO needs to be annotated with <code>@Dao</code>.</p>
+</li>
+<li>
+<p>The methods are annotated with <code>@Query</code> or <code>@Insert</code> or <code>@Update</code> or <code>@Delete</code>.</p>
+</li>
+<li>
+<p>The <code>@Query</code> annotation is used to define a custom SQL query.</p>
+</li>
+<li>
+<p>The return type you should use is <code>Flow</code> - this is a reactive type from the <code>kotlinx.coroutines</code> library.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This is a type that emits a new value every time the database is updated.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
 <div class="listingblock">
-<div class="title">Genre Enum</div>
+<div class="title">AuthorDao Class</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">import</span> <span class="nn">androidx.compose.ui.graphics.Color</span>
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">package</span> <span class="nn">at.htl.neudorfer.booksapp.model.db.dao</span>
 
-<span class="k">enum</span> <span class="kd">class</span> <span class="nc">Genre</span><span class="p">(</span><span class="kd">val</span> <span class="py">color</span><span class="p">:</span> <span class="nc">Color</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nc">FANTASY</span><span class="p">(</span><span class="nc">Color</span><span class="p">(</span><span class="mh">0xFF8BC34A</span><span class="p">)),</span>
-    <span class="nc">SCIENCE_FICTION</span><span class="p">(</span><span class="nc">Color</span><span class="p">(</span><span class="mh">0xFF00FFFF</span><span class="p">)),</span>
-    <span class="nc">ROMANCE</span><span class="p">(</span><span class="nc">Color</span><span class="p">(</span><span class="mh">0xFFFFC0CB</span><span class="p">)),</span>
-    <span class="nc">HORROR</span><span class="p">(</span><span class="nc">Color</span><span class="p">(</span><span class="mh">0xFF000000</span><span class="p">)),</span>
-    <span class="nc">THRILLER</span><span class="p">(</span><span class="nc">Color</span><span class="p">(</span><span class="mh">0xFFE91E63</span><span class="p">)),</span>
-    <span class="nc">OTHER</span><span class="p">(</span><span class="nc">Color</span><span class="p">(</span><span class="mh">0xFFA9A9A9</span><span class="p">));</span>
-    <span class="c1">// ...</span>
+<span class="k">import</span> <span class="nn">androidx.room.*</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.data.Author</span>
+<span class="k">import</span> <span class="nn">kotlinx.coroutines.flow.Flow</span>
+
+<span class="nd">@Dao</span>
+<span class="kd">interface</span> <span class="nc">AuthorDao</span> <span class="p">{</span>
+
+    <span class="nd">@Query</span><span class="p">(</span><span class="s">"SELECT * FROM authors"</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">getAll</span><span class="p">():</span> <span class="nc">Flow</span><span class="p">&lt;</span><span class="nc">List</span><span class="p">&lt;</span><span class="nc">Author</span><span class="p">&gt;&gt;</span>
+
+    <span class="nd">@Query</span><span class="p">(</span><span class="s">"SELECT * FROM AUTHORS WHERE id = :authorId"</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">getById</span><span class="p">(</span><span class="n">authorId</span><span class="p">:</span> <span class="nc">Int</span><span class="p">):</span> <span class="nc">Flow</span><span class="p">&lt;</span><span class="nc">Author</span><span class="p">&gt;</span>
+
+    <span class="nd">@Query</span><span class="p">(</span><span class="s">"SELECT * FROM authors WHERE full_name LIKE :fullName LIMIT 1"</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">findByName</span><span class="p">(</span><span class="n">fullName</span><span class="p">:</span> <span class="nc">String</span><span class="p">):</span> <span class="nc">Author</span><span class="p">?</span>
+
+
+    <span class="nd">@Insert</span><span class="p">(</span><span class="n">onConflict</span> <span class="p">=</span> <span class="nc">OnConflictStrategy</span><span class="p">.</span><span class="nc">IGNORE</span><span class="p">)</span>
+    <span class="k">suspend</span> <span class="k">fun</span> <span class="nf">insert</span><span class="p">(</span><span class="n">author</span><span class="p">:</span> <span class="nc">Author</span><span class="p">)</span>
+
+    <span class="nd">@Insert</span>
+    <span class="k">suspend</span> <span class="k">fun</span> <span class="nf">insertMultiple</span><span class="p">(</span><span class="k">vararg</span> <span class="n">authors</span><span class="p">:</span> <span class="nc">Author</span><span class="p">)</span>
+    <span class="nd">@Insert</span>
+    <span class="k">suspend</span> <span class="k">fun</span> <span class="nf">insertAll</span><span class="p">(</span><span class="n">authors</span><span class="p">:</span> <span class="nc">List</span><span class="p">&lt;</span><span class="nc">Author</span><span class="p">&gt;)</span>
+
+
+    <span class="nd">@Delete</span>
+    <span class="k">suspend</span> <span class="k">fun</span> <span class="nf">delete</span><span class="p">(</span><span class="n">author</span><span class="p">:</span> <span class="nc">Author</span><span class="p">)</span>
+
+    <span class="c1">//@Query("DELETE FROM authors")</span>
+    <span class="c1">//fun nukeTable()</span>
 <span class="p">}</span></code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_database"><a class="anchor" href="#_database"></a>5. Database</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The database is the class where you define the entities and the DAOs.</p>
+</li>
+<li>
+<p>The database needs to be annotated with <code>@Database</code>.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">AppDatabase Class</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">package</span> <span class="nn">at.htl.neudorfer.booksapp.model.db</span>
+
+<span class="k">import</span> <span class="nn">androidx.room.Database</span>
+<span class="k">import</span> <span class="nn">androidx.room.RoomDatabase</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.data.Author</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.model.db.dao.AuthorDao</span>
+
+<span class="nd">@Database</span><span class="p">(</span><span class="n">entities</span> <span class="p">=</span> <span class="p">[</span><span class="nc">Author</span><span class="o">::</span><span class="k">class</span><span class="p">],</span> <span class="n">version</span> <span class="p">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">exportSchema</span> <span class="p">=</span> <span class="k">false</span><span class="p">)</span>
+<span class="k">abstract</span> <span class="kd">class</span> <span class="nc">AppDatabase</span> <span class="p">:</span> <span class="nc">RoomDatabase</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="k">abstract</span> <span class="k">fun</span> <span class="nf">authorDao</span><span class="p">():</span> <span class="nc">AuthorDao</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dagger_hilt_module"><a class="anchor" href="#_dagger_hilt_module"></a>6. Dagger-Hilt Module</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The Dagger-Hilt module is the class where you define the database and the DAOs.</p>
+</li>
+<li>
+<p>The module needs to be annotated with <code>@Module</code>.</p>
+</li>
+<li>
+<p>The <code>@InstallIn</code> annotation is used to specify where the module should be installed.</p>
+</li>
+<li>
+<p>The <code>@Provides</code> annotation is used to specify the method that provides the database and the DAOs.</p>
+</li>
+</ul>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -814,53 +1010,207 @@ pre.rouge .gs {
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The <em>Color</em> I used here is that I can use the specific colors per Genre in the UI later on.
+With Dagger-Hilt it is possible to automatically inject the database and the DAOs into the classes that need them.
 </td>
 </tr>
 </table>
 </div>
 <div class="listingblock">
-<div class="title">Author Class</div>
+<div class="title">AppModule Class</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="kotlin"><span class="kd">data class</span> <span class="nc">Book</span><span class="p">(</span>
-    <span class="kd">val</span> <span class="py">title</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span>
-    <span class="kd">val</span> <span class="py">description</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span>
-    <span class="kd">val</span> <span class="py">coverUrl</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span>
-    <span class="kd">val</span> <span class="py">genre</span><span class="p">:</span> <span class="nc">Genre</span><span class="p">,</span>
-    <span class="kd">val</span> <span class="py">author</span><span class="p">:</span> <span class="nc">Author</span>
-<span class="p">)</span></code></pre>
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">package</span> <span class="nn">at.htl.neudorfer.booksapp.model.db</span>
+
+<span class="k">import</span> <span class="nn">android.content.Context</span>
+<span class="k">import</span> <span class="nn">androidx.room.Room</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.model.AuthorsRepository</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.model.db.dao.AuthorDao</span>
+<span class="k">import</span> <span class="nn">dagger.Module</span>
+<span class="k">import</span> <span class="nn">dagger.Provides</span>
+<span class="k">import</span> <span class="nn">dagger.hilt.InstallIn</span>
+<span class="k">import</span> <span class="nn">dagger.hilt.android.qualifiers.ApplicationContext</span>
+<span class="k">import</span> <span class="nn">dagger.hilt.components.SingletonComponent</span>
+
+<span class="nd">@Module</span>
+<span class="nd">@InstallIn</span><span class="p">(</span><span class="nc">SingletonComponent</span><span class="o">::</span><span class="k">class</span><span class="p">)</span>
+<span class="kd">object</span> <span class="nc">AppModule</span> <span class="p">{</span>
+
+    <span class="nd">@Provides</span>
+    <span class="k">fun</span> <span class="nf">provideDatabase</span><span class="p">(</span><span class="nd">@ApplicationContext</span> <span class="n">context</span><span class="p">:</span> <span class="nc">Context</span><span class="p">)</span> <span class="p">:</span> <span class="nc">AppDatabase</span><span class="p">{</span>
+        <span class="k">return</span> <span class="nc">Room</span><span class="p">.</span><span class="nf">databaseBuilder</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="nc">AppDatabase</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">,</span>
+            <span class="s">"booksapp_db"</span>
+        <span class="p">).</span><span class="nf">build</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Provides</span>
+    <span class="k">fun</span> <span class="nf">provideAuthorDao</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nc">AppDatabase</span><span class="p">)</span> <span class="p">:</span> <span class="nc">AuthorDao</span><span class="p">{</span>
+        <span class="k">return</span> <span class="n">database</span><span class="p">.</span><span class="nf">authorDao</span><span class="p">()</span>
+    <span class="p">}</span>
+
+
+    <span class="nd">@Provides</span>
+    <span class="k">fun</span> <span class="nf">provideAuthorRepo</span><span class="p">(</span><span class="n">dao</span><span class="p">:</span> <span class="nc">AuthorDao</span><span class="p">)</span> <span class="p">:</span> <span class="nc">AuthorsRepository</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nc">AuthorsRepository</span><span class="p">(</span><span class="n">dao</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="p">}</span></code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_apiservice"><a class="anchor" href="#_apiservice"></a>4. ApiService</h2>
+<h2 id="_repository"><a class="anchor" href="#_repository"></a>7. Repository</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>This is a simple code snippet, that shows how to access data from an endpoint with a <strong>GET</strong> request.</p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="title">AuthorsRepository Class</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">package</span> <span class="nn">at.htl.neudorfer.booksapp.model</span>
+
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.data.Author</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.model.api.ApiService</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.model.db.dao.AuthorDao</span>
+<span class="k">import</span> <span class="nn">kotlinx.coroutines.flow.Flow</span>
+<span class="k">import</span> <span class="nn">javax.inject.Inject</span>
+
+<span class="kd">data class</span> <span class="nc">AuthorsRepository</span> <span class="nd">@Inject</span> <span class="k">constructor</span><span class="p">(</span>
+    <span class="k">private</span> <span class="kd">val</span> <span class="py">authorDao</span><span class="p">:</span> <span class="nc">AuthorDao</span>
+<span class="p">)</span> <span class="p">{</span>
+    <span class="k">suspend</span> <span class="k">fun</span> <span class="nf">insertAuthor</span><span class="p">(</span><span class="n">author</span><span class="p">:</span> <span class="nc">Author</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">authorDao</span><span class="p">.</span><span class="nf">findByName</span><span class="p">(</span><span class="n">author</span><span class="p">.</span><span class="n">fullName</span><span class="p">)</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">authorDao</span><span class="p">.</span><span class="nf">insert</span><span class="p">(</span><span class="n">author</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">suspend</span> <span class="k">fun</span> <span class="nf">getAllAuthorsFromDB</span><span class="p">():</span> <span class="nc">Flow</span><span class="p">&lt;</span><span class="nc">List</span><span class="p">&lt;</span><span class="nc">Author</span><span class="p">&gt;&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">authorDao</span><span class="p">.</span><span class="nf">getAll</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="k">suspend</span> <span class="k">fun</span> <span class="nf">deleteAuthor</span><span class="p">(</span><span class="n">author</span><span class="p">:</span> <span class="nc">Author</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">authorDao</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="n">author</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dagger_hilt_base_application"><a class="anchor" href="#_dagger_hilt_base_application"></a>8. Dagger-Hilt Base Application</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">BaseApplication Class</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">package</span> <span class="nn">at.htl.neudorfer.booksapp</span>
+
+<span class="k">import</span> <span class="nn">android.app.Application</span>
+<span class="k">import</span> <span class="nn">dagger.hilt.android.HiltAndroidApp</span>
+
+<span class="nd">@HiltAndroidApp</span>
+<span class="kd">class</span> <span class="nc">BaseApplication</span><span class="p">:</span> <span class="nc">Application</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_manifest"><a class="anchor" href="#_manifest"></a>8.1. Manifest</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Make sure to add the <code>android:name</code> attribute to the <code>application</code> tag in the <code>AndroidManifest.xml</code> file.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
+<div class="title">AndroidManifest.xml Class</div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="kotlin"><span class="kd">interface</span> <span class="nc">ApiService</span> <span class="p">{</span>
+<pre class="rouge highlight"><code data-lang="xml"><span class="nt">&lt;application</span>
+        <span class="na">android:name=</span><span class="s">".BaseApplication"</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="na">android:usesCleartextTraffic=</span><span class="s">"true"</span>
+        <span class="err">...</span>
+        <span class="na">tools:targetApi=</span><span class="s">"31"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;activity</span>
+            <span class="na">android:name=</span><span class="s">".MainActivity"</span> <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="err">...</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>android:name</code> attribute is used to specify the class that extends the <code>Application</code> class.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <code>android:name</code> attribute is used to specify the class that extends the <code>Activity</code> class.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mainactivity"><a class="anchor" href="#_mainactivity"></a>9. MainActivity</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">MainActivity Class</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">package</span> <span class="nn">at.htl.neudorfer.booksapp</span>
 
-    <span class="nd">@GET</span><span class="p">(</span><span class="s">"book/all"</span><span class="p">)</span>
-    <span class="k">suspend</span> <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">():</span> <span class="nc">List</span><span class="p">&lt;</span><span class="nc">Book</span><span class="p">&gt;</span>
+<span class="k">import</span> <span class="nn">android.os.Bundle</span>
+<span class="k">import</span> <span class="nn">androidx.activity.ComponentActivity</span>
+<span class="k">import</span> <span class="nn">androidx.activity.compose.setContent</span>
+<span class="k">import</span> <span class="nn">androidx.activity.viewModels</span>
+<span class="k">import</span> <span class="nn">androidx.compose.foundation.layout.Column</span>
+<span class="k">import</span> <span class="nn">androidx.compose.material.Tab</span>
+<span class="k">import</span> <span class="nn">androidx.compose.material.TabRow</span>
+<span class="k">import</span> <span class="nn">androidx.compose.material.Text</span>
+<span class="k">import</span> <span class="nn">androidx.compose.runtime.*</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.ui.authors.AuthorsListScreen</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.ui.authors.AuthorsViewModel</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.ui.books.BookList</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.ui.favouriteAuthors.FavouriteAuthorsListScreen</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.ui.favouriteAuthors.FavouriteAuthorsViewModel</span>
+<span class="k">import</span> <span class="nn">at.htl.neudorfer.booksapp.ui.theme.BooksTheme</span>
+<span class="k">import</span> <span class="nn">dagger.hilt.android.AndroidEntryPoint</span>
 
-    <span class="k">companion</span> <span class="k">object</span><span class="p">{</span>
-        <span class="k">private</span> <span class="kd">var</span> <span class="py">apiService</span><span class="p">:</span> <span class="nc">ApiService</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
-        <span class="k">fun</span> <span class="nf">getInstance</span><span class="p">():</span> <span class="nc">ApiService</span><span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">apiService</span> <span class="p">==</span> <span class="k">null</span><span class="p">){</span>
-                <span class="n">apiService</span> <span class="p">=</span> <span class="nc">Retrofit</span><span class="p">.</span><span class="nc">Builder</span><span class="p">()</span>
-                    <span class="p">.</span><span class="nf">baseUrl</span><span class="p">(</span><span class="s">"http://10.0.2.2:8080/"</span><span class="p">)</span> <i class="conum" data-value="1"></i><b>(1)</b>
-                    <span class="p">.</span><span class="nf">addConverterFactory</span><span class="p">(</span><span class="nc">GsonConverterFactory</span><span class="p">.</span><span class="nf">create</span><span class="p">())</span>
-                    <span class="p">.</span><span class="nf">build</span><span class="p">()</span>
-                    <span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="nc">ApiService</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">)</span>
+<span class="nd">@AndroidEntryPoint</span>  <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="kd">class</span> <span class="nc">MainActivity</span> <span class="p">:</span> <span class="nc">ComponentActivity</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="kd">val</span> <span class="py">authorVM</span><span class="p">:</span> <span class="nc">AuthorsViewModel</span> <span class="k">by</span> <span class="nf">viewModels</span><span class="p">()</span> <i class="conum" data-value="2"></i><b>(2)</b>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onCreate</span><span class="p">(</span><span class="n">savedInstanceState</span><span class="p">:</span> <span class="nc">Bundle</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="p">.</span><span class="nf">onCreate</span><span class="p">(</span><span class="n">savedInstanceState</span><span class="p">)</span>
+        <span class="nf">setContent</span> <span class="p">{</span>
+            <span class="nc">BooksTheme</span> <span class="p">{</span>
+                <span class="nc">Tabs</span><span class="p">(</span><span class="n">authorVM</span><span class="p">)</span> <i class="conum" data-value="3"></i><b>(3)</b>
             <span class="p">}</span>
-            <span class="k">return</span> <span class="n">apiService</span><span class="o">!!</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="c1">// Source for the Tabs:</span>
+<span class="c1">// https://www.rockandnull.com/jetpack-compose-swipe-pager/</span>
+
+<span class="nd">@Composable</span>
+<span class="k">fun</span> <span class="nf">Tabs</span><span class="p">(</span><span class="n">authorsVM</span><span class="p">:</span> <span class="nc">AuthorsViewModel</span><span class="p">)</span> <span class="p">{</span> <i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="kd">var</span> <span class="py">tabIndex</span> <span class="k">by</span> <span class="nf">remember</span> <span class="p">{</span> <span class="nf">mutableStateOf</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">}</span>
+
+    <span class="kd">val</span> <span class="py">tabTitles</span> <span class="p">=</span> <span class="nf">listOf</span><span class="p">(</span><span class="s">"Books"</span><span class="p">,</span> <span class="s">"Authors"</span><span class="p">)</span>
+    <span class="nc">Column</span> <span class="p">{</span>
+        <span class="nc">TabRow</span><span class="p">(</span><span class="n">selectedTabIndex</span> <span class="p">=</span> <span class="n">tabIndex</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">tabTitles</span><span class="p">.</span><span class="nf">forEachIndexed</span> <span class="p">{</span> <span class="n">index</span><span class="p">,</span> <span class="n">title</span> <span class="p">-&gt;</span>
+                <span class="nc">Tab</span><span class="p">(</span><span class="n">selected</span> <span class="p">=</span> <span class="n">tabIndex</span> <span class="p">==</span> <span class="n">index</span><span class="p">,</span>
+                    <span class="n">onClick</span> <span class="p">=</span> <span class="p">{</span> <span class="n">tabIndex</span> <span class="p">=</span> <span class="n">index</span> <span class="p">},</span>
+                    <span class="n">text</span> <span class="p">=</span> <span class="p">{</span> <span class="nc">Text</span><span class="p">(</span><span class="n">text</span> <span class="p">=</span> <span class="n">title</span><span class="p">)</span> <span class="p">})</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">when</span> <span class="p">(</span><span class="n">tabIndex</span><span class="p">)</span> <span class="p">{</span>
+            <span class="mi">0</span> <span class="p">-&gt;</span> <span class="nc">BookList</span><span class="p">()</span>
+            <span class="mi">1</span> <span class="p">-&gt;</span> <span class="nc">AuthorsListScreen</span><span class="p">(</span><span class="n">authorsVM</span><span class="p">)</span> <i class="conum" data-value="5"></i><b>(5)</b>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span></code></pre>
@@ -870,84 +1220,23 @@ The <em>Color</em> I used here is that I can use the specific colors per Genre i
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>This is the URL of the server.
-If you are using an emulator, you have to use the IP address of the host machine.</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-for me, it had to be the <code><a href="http://10.0.2.2:8080/" class="bare">http://10.0.2.2:8080/</a></code> URL, because I am using the Android Emulator.
-</td>
-</tr>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_accessing_data_from_an_endpoint"><a class="anchor" href="#_accessing_data_from_an_endpoint"></a>4.1. Accessing Data from an Endpoint</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="xml"><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
-<span class="nt">&lt;manifest</span> <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
-    <span class="na">xmlns:tools=</span><span class="s">"http://schemas.android.com/tools"</span><span class="nt">&gt;</span>
-
-    <span class="nt">&lt;uses-permission</span> <span class="na">android:name=</span><span class="s">"android.permission.INTERNET"</span> <span class="nt">/&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
-
-    <span class="nt">&lt;application</span>
-        <span class="na">android:usesCleartextTraffic=</span><span class="s">"true"</span> <i class="conum" data-value="2"></i><b>(2)</b>
-        <span class="err">....</span>
-        <span class="err">....</span>
-    <span class="err">&lt;/application</span><span class="nt">&gt;</span>
-<span class="nt">&lt;/manifest&gt;</span></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><mark>This is needed to access the internet.</mark></td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>This is needed to access Endpoints which are running on <mark>localhost</mark>.</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_mainviewmodel"><a class="anchor" href="#_mainviewmodel"></a>5. MainViewModel</h2>
-<div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-in progress :)
-</td>
+<td>Here you have to add the <code>@AndroidEntryPoint</code> annotation to the class.</td>
 </tr>
 </table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_mainactivity"><a class="anchor" href="#_mainactivity"></a>6. MainActivity</h2>
+<h2 id="_access_db_from_composable"><a class="anchor" href="#_access_db_from_composable"></a>10. Access DB from Composable</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-in progress :)
+WORK IN PROGRESS
 </td>
 </tr>
 </table>
