@@ -513,8 +513,26 @@ fun Tabs(authorsVM: AuthorsViewModel) { <.>
 [TIP]
 WORK IN PROGRESS
 
-== Problems
+== Problems / Help
 
+=== Checking the Data via Android-Studio Database Inspector
+
+.Database Inspector
+image::../img/29032023_database_inspector.png[]
+
+* When running an App where RoomDB is used, and you click on the bottom Tab `App Inspection` you can see all your Database Tables and the Data inside.
+* Furthermore, it can be used directly write SQL-Queries to the Database.
+
+=== Deleting all Data of a Table
+
+.AuthorDao
+image::../img/29032023_execute_via_ide.png[]
+
+* When you want to clea up your database you can simply execute the following SQL statement via the Android-Studio Database Inspector Query Console.
+* Another way is to use the Queries which are already defined in the `DAO` - on the left side of the File you can see the Database Symbol (when you hover over it it says 'Run Sqlite statement in Databse Inspector')
+** This only shows when you have the Database Inspector open!
+
+[%collapsible]
 === Changing the Schema
 
 * src: https://stackoverflow.com/questions/49629656/please-provide-a-migration-in-the-builder-or-call-fallbacktodestructivemigration[Stackoverflow fix]
