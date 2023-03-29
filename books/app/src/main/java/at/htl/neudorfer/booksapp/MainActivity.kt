@@ -14,6 +14,8 @@ import at.htl.neudorfer.booksapp.ui.authors.AuthorsViewModel
 import at.htl.neudorfer.booksapp.ui.books.BookList
 import at.htl.neudorfer.booksapp.ui.favouriteAuthors.FavouriteAuthorsListScreen
 import at.htl.neudorfer.booksapp.ui.favouriteAuthors.FavouriteAuthorsViewModel
+import at.htl.neudorfer.booksapp.ui.profile.ProfileScreen
+import at.htl.neudorfer.booksapp.ui.profile.ProfileViewModel
 import at.htl.neudorfer.booksapp.ui.theme.BooksTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,12 +23,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val authorVM: AuthorsViewModel by viewModels()
     private val favAuthorVM: FavouriteAuthorsViewModel by viewModels()
+    private val profileVM: ProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             BooksTheme {
-                Tabs(authorVM, favAuthorVM)
+                Tabs(authorVM, favAuthorVM, profileVM)
             }
         }
     }
@@ -37,10 +40,14 @@ class MainActivity : ComponentActivity() {
 // https://www.rockandnull.com/jetpack-compose-swipe-pager/
 
 @Composable
-fun Tabs(authorsVM: AuthorsViewModel, favouriteAuthorsVM: FavouriteAuthorsViewModel) {
+fun Tabs(
+    authorsVM: AuthorsViewModel,
+    favouriteAuthorsVM: FavouriteAuthorsViewModel,
+    profileVm: ProfileViewModel
+) {
     var tabIndex by remember { mutableStateOf(0) }
 
-    val tabTitles = listOf("Books", "Authors", "Liked")
+    val tabTitles = listOf("Books", "Authors", "Liked", "Profile")
     Column {
         TabRow(selectedTabIndex = tabIndex) {
             tabTitles.forEachIndexed { index, title ->
@@ -53,6 +60,7 @@ fun Tabs(authorsVM: AuthorsViewModel, favouriteAuthorsVM: FavouriteAuthorsViewMo
             0 -> BookList()
             1 -> AuthorsListScreen(authorsVM)
             2 -> FavouriteAuthorsListScreen(favouriteAuthorsVM)
+            3 -> ProfileScreen(profileVm)
         }
     }
 }
