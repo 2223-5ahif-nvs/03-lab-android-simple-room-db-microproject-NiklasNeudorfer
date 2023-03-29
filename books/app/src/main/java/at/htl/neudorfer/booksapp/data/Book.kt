@@ -1,6 +1,9 @@
 package at.htl.neudorfer.booksapp.data
 
 data class Book(
+    val isLiked: Boolean,
+    val imageIcon: String,
+
     val isbn: String,
     val title: String,
     val genre: Genre,
