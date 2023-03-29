@@ -532,6 +532,11 @@ image::../img/29032023_execute_via_ide.png[]
 * Another way is to use the Queries which are already defined in the `DAO` - on the left side of the File you can see the Database Symbol (when you hover over it it says 'Run Sqlite statement in Databse Inspector')
 ** This only shows when you have the Database Inspector open!
 
+[NOTE]
+The `nukeTable` function I have in the Screenshot above is only uncommented when I want to use it!
+Directly after that it should be commented out again to prevent accidental deletion of all data!
+Another way would be to just use the DB-Inspector console
+
 [%collapsible]
 === Changing the Schema
 
