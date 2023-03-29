@@ -12,16 +12,18 @@ data class UserRepository @Inject constructor(
 ) {
 
     suspend fun insertUser(user: User) {
-        if (userDao.findByUsername(user.name) == null) {
-            userDao.insert(user)
-        }
+        userDao.insert(user)
     }
 
-    suspend fun getAllAuthorsFromDB(): Flow<List<User>> {
+    suspend fun getAll(): Flow<List<User>> {
         return userDao.getAll()
     }
 
-    suspend fun deleteAuthor(user: User) {
+    suspend fun getByUsername(username: String): Flow<User?> {
+        return userDao.findByUsername(username)
+    }
+
+    suspend fun deleteUser(user: User) {
         userDao.delete(user)
     }
 }

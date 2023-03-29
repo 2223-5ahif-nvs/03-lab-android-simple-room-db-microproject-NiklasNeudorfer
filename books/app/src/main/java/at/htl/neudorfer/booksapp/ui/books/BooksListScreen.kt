@@ -31,6 +31,8 @@ import coil.request.ImageRequest
 @Composable
 fun BookItemPreview() {
     val book = Book(
+        false,
+        "3",
         "1",
         "The Lord of the Rings",
         Genre.FANTASY,

@@ -11,11 +11,11 @@ interface UserDao {
     @Query("SELECT * FROM user")
     fun getAll(): Flow<List<User>>
 
-    @Query("SELECT * FROM user WHERE id = :authorId")
-    fun getById(authorId: Int): Flow<User>
+    @Query("SELECT * FROM user WHERE id = :userId")
+    fun getById(userId: Int): Flow<User>
 
     @Query("SELECT * FROM user WHERE username LIKE :uname LIMIT 1")
-    fun findByUsername(uname: String): User?
+    fun findByUsername(uname: String): Flow<User?>
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

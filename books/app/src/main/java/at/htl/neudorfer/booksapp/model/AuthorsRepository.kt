@@ -9,6 +9,10 @@ import javax.inject.Inject
 data class AuthorsRepository @Inject constructor(
     private val authorDao: AuthorDao
 ) {
+    // ----------------------------------------------------
+    //      API ACCESS
+    // ----------------------------------------------------
+
     private val apiService: ApiService = ApiService.getInstance()
 
     suspend fun getBookAuthors(): List<Author> {
