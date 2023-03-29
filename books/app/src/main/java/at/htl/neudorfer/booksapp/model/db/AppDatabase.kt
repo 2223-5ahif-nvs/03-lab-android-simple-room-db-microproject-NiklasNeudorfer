@@ -7,7 +7,7 @@ import at.htl.neudorfer.booksapp.data.User
 import at.htl.neudorfer.booksapp.model.db.dao.AuthorDao
 import at.htl.neudorfer.booksapp.model.db.dao.UserDao
 
-@Database(entities = [Author::class, User::class], version = 3, exportSchema = false)
+@Database(entities = [Author::class, User::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun authorDao(): AuthorDao
