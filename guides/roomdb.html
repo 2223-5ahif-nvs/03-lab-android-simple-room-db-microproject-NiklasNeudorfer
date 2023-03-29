@@ -585,9 +585,11 @@ pre.rouge .gs {
 </li>
 <li><a href="#_mainactivity">9. MainActivity</a></li>
 <li><a href="#_access_db_from_composable">10. Access DB from Composable</a></li>
-<li><a href="#_problems">11. Problems</a>
+<li><a href="#_problems_help">11. Problems / Help</a>
 <ul class="sectlevel2">
-<li><a href="#_changing_the_schema">11.1. Changing the Schema</a></li>
+<li><a href="#_checking_the_data_via_android_studio_database_inspector">11.1. Checking the Data via Android-Studio Database Inspector</a></li>
+<li><a href="#_deleting_all_data_of_a_table">11.2. Deleting all Data of a Table</a></li>
+<li><a href="#_changing_the_schema">11.3. Changing the Schema</a></li>
 </ul>
 </li>
 </ul>
@@ -1249,10 +1251,55 @@ WORK IN PROGRESS
 </div>
 </div>
 <div class="sect1">
-<h2 id="_problems"><a class="anchor" href="#_problems"></a>11. Problems</h2>
+<h2 id="_problems_help"><a class="anchor" href="#_problems_help"></a>11. Problems / Help</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_changing_the_schema"><a class="anchor" href="#_changing_the_schema"></a>11.1. Changing the Schema</h3>
+<h3 id="_checking_the_data_via_android_studio_database_inspector"><a class="anchor" href="#_checking_the_data_via_android_studio_database_inspector"></a>11.1. Checking the Data via Android-Studio Database Inspector</h3>
+<div class="imageblock">
+<div class="content">
+<img src="../img/29032023_database_inspector.png" alt="29032023 database inspector">
+</div>
+<div class="title">Figure 1. Database Inspector</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When running an App where RoomDB is used, and you click on the bottom Tab <code>App Inspection</code> you can see all your Database Tables and the Data inside.</p>
+</li>
+<li>
+<p>Furthermore, it can be used directly write SQL-Queries to the Database.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deleting_all_data_of_a_table"><a class="anchor" href="#_deleting_all_data_of_a_table"></a>11.2. Deleting all Data of a Table</h3>
+<div class="imageblock">
+<div class="content">
+<img src="../img/29032023_execute_via_ide.png" alt="29032023 execute via ide">
+</div>
+<div class="title">Figure 2. AuthorDao</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When you want to clea up your database you can simply execute the following SQL statement via the Android-Studio Database Inspector Query Console.</p>
+</li>
+<li>
+<p>Another way is to use the Queries which are already defined in the <code>DAO</code> - on the left side of the File you can see the Database Symbol (when you hover over it it says 'Run Sqlite statement in Databse Inspector')</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This only shows when you have the Database Inspector open!</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_changing_the_schema"><a class="anchor" href="#_changing_the_schema"></a>11.3. Changing the Schema</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1264,7 +1311,7 @@ WORK IN PROGRESS
 <div class="content">
 <img src="../img/29032023_schema_version.png" alt="29032023 schema version">
 </div>
-<div class="title">Figure 1. Error when trying to run the App again after changing the Schema</div>
+<div class="title">Figure 3. Error when trying to run the App again after changing the Schema</div>
 </div>
 <div class="ulist">
 <ul>
@@ -1325,7 +1372,7 @@ abstract class AppDatabase : RoomDatabase() {
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0<br>
-Last updated 2023-03-29 18:38:59 UTC
+Last updated 2023-03-29 19:00:23 UTC
 </div>
 </div>
 </body>
