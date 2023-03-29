@@ -18,38 +18,20 @@ class ProfileViewModel @Inject constructor(
     private val profileRepository: UserRepository
 ) : ViewModel() {
 
-    var users by mutableStateOf(emptyList<User?>())
+    var users by mutableStateOf(emptyList<User>())
 
     init {
         viewModelScope.launch {
-            setupAdminUser()
-            getAdminUser()
+            getUsers()
         }
     }
 
-    suspend fun getUsers() = viewModelScope.launch(Dispatchers.IO) {
+    suspend fun getUsers() {
         profileRepository.getAll().collect { r -> users = r }
     }
 
     fun addUser(usr: User) = viewModelScope.launch(Dispatchers.IO) {
         profileRepository.insertUser(usr);
-    }
-
-    suspend fun getAdminUser() {
-        profileRepository.getByUsername("admin").collect { u -> users = listOf<User?>(u) }
-    }
-
-    suspend fun setupAdminUser() {
-        getAdminUser()
-
-        if (users.size <= 0) {
-            profileRepository.insertUser(
-                user = User(
-                    profilePicture = "1",
-                    name = "admin",
-                    id = -1
-                )
-            )
-        }
+        getUsers()
     }
 }
