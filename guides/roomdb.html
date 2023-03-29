@@ -585,6 +585,11 @@ pre.rouge .gs {
 </li>
 <li><a href="#_mainactivity">9. MainActivity</a></li>
 <li><a href="#_access_db_from_composable">10. Access DB from Composable</a></li>
+<li><a href="#_problems">11. Problems</a>
+<ul class="sectlevel2">
+<li><a href="#_changing_the_schema">11.1. Changing the Schema</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -1243,11 +1248,84 @@ WORK IN PROGRESS
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_problems"><a class="anchor" href="#_problems"></a>11. Problems</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_changing_the_schema"><a class="anchor" href="#_changing_the_schema"></a>11.1. Changing the Schema</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>src: <a href="https://stackoverflow.com/questions/49629656/please-provide-a-migration-in-the-builder-or-call-fallbacktodestructivemigration">Stackoverflow fix</a></p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../img/29032023_schema_version.png" alt="29032023 schema version">
+</div>
+<div class="title">Figure 1. Error when trying to run the App again after changing the Schema</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>AppModule</strong>:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin">    <span class="nd">@Provides</span>
+    <span class="k">fun</span> <span class="nf">provideDatabase</span><span class="p">(</span><span class="nd">@ApplicationContext</span> <span class="n">context</span><span class="p">:</span> <span class="nc">Context</span><span class="p">):</span> <span class="nc">AppDatabase</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nc">Room</span><span class="p">.</span><span class="nf">databaseBuilder</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="nc">AppDatabase</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">,</span>
+            <span class="s">"booksapp_db"</span>
+        <span class="p">)</span>
+            <span class="p">.</span><span class="nf">fallbackToDestructiveMigration</span><span class="p">()</span> <i class="conum" data-value="1"></i><b>(1)</b>
+            <span class="p">.</span><span class="nf">build</span><span class="p">()</span>
+    <span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>With this line added it is now possible to just change the version number of our database 😁️</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>How you do this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>@Database(entities = [Author::class, User::class], version = 2, exportSchema = false) <i class="conum" data-value="1"></i><b>(1)</b>
+abstract class AppDatabase : RoomDatabase() {
+
+    abstract fun authorDao(): AuthorDao
+
+    abstract fun userDao(): UserDao
+}</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Just change the version number of the database, and you should be fine.
+(In my case I had to switch it from 1 to 2)</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0<br>
-Last updated 2023-03-17 05:47:49 UTC
+Last updated 2023-03-29 18:38:59 UTC
 </div>
 </div>
 </body>
