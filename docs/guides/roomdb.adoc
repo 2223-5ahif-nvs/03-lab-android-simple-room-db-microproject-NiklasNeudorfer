@@ -512,3 +512,46 @@ fun Tabs(authorsVM: AuthorsViewModel) { <.>
 
 [TIP]
 WORK IN PROGRESS
+
+== Problems
+
+=== Changing the Schema
+
+* src: https://stackoverflow.com/questions/49629656/please-provide-a-migration-in-the-builder-or-call-fallbacktodestructivemigration[Stackoverflow fix]
+
+.Error when trying to run the App again after changing the Schema
+image::../img/29032023_schema_version.png[]
+
+* *AppModule*:
+
+[source,kotlin]
+-----
+    @Provides
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "booksapp_db"
+        )
+            .fallbackToDestructiveMigration() <.>
+            .build()
+    }
+-----
+
+<.> With this line added it is now possible to just change the version number of our database 😁️
+
+How you do this:
+
+[src,kotlin]
+----
+@Database(entities = [Author::class, User::class], version = 2, exportSchema = false) <.>
+abstract class AppDatabase : RoomDatabase() {
+
+    abstract fun authorDao(): AuthorDao
+
+    abstract fun userDao(): UserDao
+}
+----
+
+<.> Just change the version number of the database, and you should be fine.
+(In my case I had to switch it from 1 to 2)
