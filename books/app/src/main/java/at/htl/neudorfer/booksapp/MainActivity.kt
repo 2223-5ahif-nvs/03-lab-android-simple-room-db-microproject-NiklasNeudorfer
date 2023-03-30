@@ -13,7 +13,6 @@ import at.htl.neudorfer.booksapp.ui.authors.AuthorsListScreen
 import at.htl.neudorfer.booksapp.ui.authors.AuthorsViewModel
 import at.htl.neudorfer.booksapp.ui.books.BookList
 import at.htl.neudorfer.booksapp.ui.favouriteAuthors.FavouriteAuthorsListScreen
-import at.htl.neudorfer.booksapp.ui.favouriteAuthors.FavouriteAuthorsViewModel
 import at.htl.neudorfer.booksapp.ui.profile.ProfileScreen
 import at.htl.neudorfer.booksapp.ui.profile.ProfileViewModel
 import at.htl.neudorfer.booksapp.ui.theme.BooksTheme
@@ -22,14 +21,13 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val authorVM: AuthorsViewModel by viewModels()
-    private val favAuthorVM: FavouriteAuthorsViewModel by viewModels()
     private val profileVM: ProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             BooksTheme {
-                Tabs(authorVM, favAuthorVM, profileVM)
+                Tabs(authorVM, profileVM)
             }
         }
     }
@@ -42,7 +40,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Tabs(
     authorsVM: AuthorsViewModel,
-    favouriteAuthorsVM: FavouriteAuthorsViewModel,
     profileVm: ProfileViewModel
 ) {
     var tabIndex by remember { mutableStateOf(0) }
@@ -59,7 +56,7 @@ fun Tabs(
         when (tabIndex) {
             0 -> BookList()
             1 -> AuthorsListScreen(authorsVM)
-            2 -> FavouriteAuthorsListScreen(favouriteAuthorsVM)
+            2 -> FavouriteAuthorsListScreen(authorsVM)
             3 -> ProfileScreen(profileVm)
         }
     }

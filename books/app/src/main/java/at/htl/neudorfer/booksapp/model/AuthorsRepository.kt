@@ -30,7 +30,7 @@ data class AuthorsRepository @Inject constructor(
         }
     }
 
-    suspend fun getAllAuthorsFromDB(): Flow<List<Author>> {
+    fun getAllAuthorsFromDB(): Flow<List<Author>> {
         return authorDao.getAll()
     }
 

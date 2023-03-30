@@ -20,8 +20,6 @@ import at.htl.neudorfer.booksapp.data.Author
 
 @Composable
 fun AuthorsListScreen(viewModel: AuthorsViewModel) {
-    //val viewModel: AuthorsViewModel = hiltViewModel();
-    //private val viewModel: AuthorsViewModel by viewModels()
     val authors = viewModel.authorsState.value
 
     LazyColumn() {
@@ -44,13 +42,6 @@ fun AuthorItem(author: Author, viewModel: AuthorsViewModel) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-//            AsyncImage(
-//                model = author,
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .size(88.dp)
-//                    .padding(4.dp)
-//            )
             Column(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
@@ -77,11 +68,3 @@ fun AuthorItem(author: Author, viewModel: AuthorsViewModel) {
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//    BooksTheme() {
-//        AuthorsListScreen()
-//    }
-//}

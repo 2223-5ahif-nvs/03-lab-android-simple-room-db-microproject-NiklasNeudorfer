@@ -21,12 +21,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.htl.neudorfer.booksapp.data.Author
+import at.htl.neudorfer.booksapp.ui.authors.AuthorsViewModel
 
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun FavouriteAuthorsListScreen(viewModel: FavouriteAuthorsViewModel) {
-    val authors = viewModel.authors
+fun FavouriteAuthorsListScreen(viewModel: AuthorsViewModel) {
+    val authors = viewModel.authorsStateDB.value
 
     //val gradientColors = listOf(Color.Cyan, Color.Blue, Color.Magenta)
 

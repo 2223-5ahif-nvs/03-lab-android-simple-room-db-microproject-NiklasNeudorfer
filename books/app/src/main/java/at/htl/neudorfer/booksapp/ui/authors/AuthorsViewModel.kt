@@ -15,27 +15,39 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthorsViewModel @Inject constructor(
     private val authorsRepository: AuthorsRepository
-): ViewModel() {
+) : ViewModel() {
     val TAG = AuthorsViewModel::class.java.name;
 
     init {
         viewModelScope.launch {
-            //addAuthor(Author("Hans", 0)) // Adding Test data
             val authors = getAuthors()
+            //getAuthorsFromDB()
+
             Log.d(TAG, "Authors: $authors")
+
             authorsState.value = authors
+
+            getAuthorsFromDB()
         }
     }
 
     val authorsState: MutableState<List<Author>> = mutableStateOf((emptyList<Author>()))
+    val authorsStateDB: MutableState<List<Author>> = mutableStateOf((emptyList<Author>()))
 
-    private suspend fun getAuthors():List<Author> {
-        return authorsRepository.getBookAuthors();
+    private suspend fun getAuthors(): List<Author> {
+        try {
+            return authorsRepository.getBookAuthors();
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while getting authors", e)
+            return emptyList()
+        }
     }
-
 
     fun addAuthor(author: Author) = viewModelScope.launch(Dispatchers.IO) {
         authorsRepository.insertAuthor(author)
     }
 
+    private suspend fun getAuthorsFromDB() {
+        return authorsRepository.getAllAuthorsFromDB().collect { r -> authorsStateDB.value = r }
+    }
 }
