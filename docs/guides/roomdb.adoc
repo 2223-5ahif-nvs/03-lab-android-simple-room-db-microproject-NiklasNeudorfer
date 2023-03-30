@@ -510,8 +510,33 @@ fun Tabs(authorsVM: AuthorsViewModel) { <.>
 
 == Access DB from Composable
 
-[TIP]
-WORK IN PROGRESS
+.ViewModel
+[source,kotlin]
+----
+@HiltViewModel
+class FavouriteAuthorsViewModel @Inject constructor(
+    private val authorsRepository: AuthorsRepository
+) : ViewModel() {
+    var authors by mutableStateOf(emptyList<Author>()) <.>
+
+    init {
+        viewModelScope.launch {
+            getAuthors()
+        }
+    }
+
+    suspend fun getAuthors() {
+        authorsRepository.getAllAuthorsFromDB().collect { r -> authors = r } <.>
+    }
+}
+----
+
+<.> This is the List where the data gets saved -> in the composable you need to access this list.
+
+<.> This is how you can access the database from a Composable and convert the `Flow` to a `List<Author>`
+
+
+
 
 == Problems / Help
 
