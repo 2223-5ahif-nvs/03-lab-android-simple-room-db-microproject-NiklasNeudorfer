@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,9 +29,6 @@ import at.htl.neudorfer.booksapp.ui.authors.AuthorsViewModel
 fun FavouriteAuthorsListScreen(viewModel: AuthorsViewModel) {
     val authors = viewModel.authorsStateDB.value
 
-    //val gradientColors = listOf(Color.Cyan, Color.Blue, Color.Magenta)
-
-
     Text(
         text = "Your likes:",
         fontStyle = MaterialTheme.typography.h1.fontStyle,
@@ -41,13 +38,6 @@ fun FavouriteAuthorsListScreen(viewModel: AuthorsViewModel) {
         modifier = Modifier
             .padding(10.dp)
             .fillMaxWidth()
-        /*
-        style = TextStyle(
-            brush = Brush.linearGradient(
-                colors = gradientColors
-            )
-        )
-         */
     )
     Divider(
         startIndent = 8.dp,
@@ -57,13 +47,13 @@ fun FavouriteAuthorsListScreen(viewModel: AuthorsViewModel) {
     LazyColumn {
 
         items(authors) { author ->
-            FavouriteAuthorItem(author)
+            FavouriteAuthorItem(author, viewModel)
         }
     }
 }
 
 @Composable
-fun FavouriteAuthorItem(author: Author) {
+fun FavouriteAuthorItem(author: Author, viewModel: AuthorsViewModel) {
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = 2.dp,
@@ -71,13 +61,29 @@ fun FavouriteAuthorItem(author: Author) {
             .fillMaxWidth()
             .padding(top = 16.dp)
     ) {
-        Row {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
             Column(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(16.dp)
             ) {
                 Text(text = author.fullName)
+            }
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                OutlinedButton(
+                    onClick = { viewModel.deleteAuthor(author) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = null,
+                        tint = Color.Red
+                    )
+                }
             }
         }
     }

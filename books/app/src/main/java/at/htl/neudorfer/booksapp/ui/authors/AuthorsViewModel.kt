@@ -47,6 +47,11 @@ class AuthorsViewModel @Inject constructor(
         authorsRepository.insertAuthor(author)
     }
 
+    fun deleteAuthor(author: Author) = viewModelScope.launch(Dispatchers.IO) {
+        authorsRepository.deleteAuthor(author)
+
+    }
+
     private suspend fun getAuthorsFromDB() {
         return authorsRepository.getAllAuthorsFromDB().collect { r -> authorsStateDB.value = r }
     }
