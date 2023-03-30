@@ -9,7 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -22,15 +22,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.htl.neudorfer.booksapp.data.Author
 import at.htl.neudorfer.booksapp.ui.authors.AuthorsViewModel
+import at.htl.neudorfer.booksapp.ui.profile.ProfileViewModel
 
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun FavouriteAuthorsListScreen(viewModel: AuthorsViewModel) {
+fun FavouriteAuthorsListScreen(viewModel: AuthorsViewModel, userVM: ProfileViewModel) {
     val authors = viewModel.authorsStateDB.value
+    var username by remember { mutableStateOf("Your") }
+
+    if (userVM.users.size > 0){
+        username = userVM.users[0].name
+    }
 
     Text(
-        text = "Your likes:",
+        text = username + "'s likes:",
         fontStyle = MaterialTheme.typography.h1.fontStyle,
         fontWeight = FontWeight.Medium,
         fontFamily = FontFamily.SansSerif,

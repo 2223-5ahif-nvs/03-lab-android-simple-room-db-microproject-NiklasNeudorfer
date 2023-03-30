@@ -56,7 +56,7 @@ fun Tabs(
         when (tabIndex) {
             0 -> BookList()
             1 -> AuthorsListScreen(authorsVM)
-            2 -> FavouriteAuthorsListScreen(authorsVM)
+            2 -> FavouriteAuthorsListScreen(authorsVM, profileVm)
             3 -> ProfileScreen(profileVm)
         }
     }
