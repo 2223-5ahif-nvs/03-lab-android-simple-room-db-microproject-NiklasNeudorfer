@@ -34,4 +34,16 @@ class ProfileViewModel @Inject constructor(
         profileRepository.insertUser(usr);
         getUsers()
     }
+
+    fun updateUser(usr: User, uname: String, pb: Int) = viewModelScope.launch(Dispatchers.IO) {
+        usr.profilePicture = pb;
+
+        if (uname.trim().length > 0){
+            usr.name = uname;
+        }
+
+        profileRepository.updateUser(usr);
+        getUsers()
+    }
+
 }

@@ -26,6 +26,8 @@ interface UserDao {
     @Insert
     suspend fun insertAll(users: List<User>)
 
+    @Update
+    suspend fun updateUser(user: User)
 
     @Delete
     suspend fun delete(author: User)
