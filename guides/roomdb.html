@@ -1236,15 +1236,36 @@ Make sure to add the <code>android:name</code> attribute to the <code>applicatio
 <div class="sect1">
 <h2 id="_access_db_from_composable"><a class="anchor" href="#_access_db_from_composable"></a>10. Access DB from Composable</h2>
 <div class="sectionbody">
-<div class="admonitionblock tip">
+<div class="listingblock">
+<div class="title">ViewModel</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nd">@HiltViewModel</span>
+<span class="kd">class</span> <span class="nc">FavouriteAuthorsViewModel</span> <span class="nd">@Inject</span> <span class="k">constructor</span><span class="p">(</span>
+    <span class="k">private</span> <span class="kd">val</span> <span class="py">authorsRepository</span><span class="p">:</span> <span class="nc">AuthorsRepository</span>
+<span class="p">)</span> <span class="p">:</span> <span class="nc">ViewModel</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="py">authors</span> <span class="k">by</span> <span class="nf">mutableStateOf</span><span class="p">(</span><span class="n">emptyList</span><span class="p">&lt;</span><span class="nc">Author</span><span class="p">&gt;())</span> <i class="conum" data-value="1"></i><b>(1)</b>
+
+    <span class="nf">init</span> <span class="p">{</span>
+        <span class="n">viewModelScope</span><span class="p">.</span><span class="nf">launch</span> <span class="p">{</span>
+            <span class="nf">getAuthors</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">suspend</span> <span class="k">fun</span> <span class="nf">getAuthors</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">authorsRepository</span><span class="p">.</span><span class="nf">getAllAuthorsFromDB</span><span class="p">().</span><span class="nf">collect</span> <span class="p">{</span> <span class="n">r</span> <span class="p">-&gt;</span> <span class="n">authors</span> <span class="p">=</span> <span class="n">r</span> <span class="p">}</span> <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
 <table>
 <tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-WORK IN PROGRESS
-</td>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This is the List where the data gets saved &#8594; in the composable you need to access this list.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>This is how you can access the database from a Composable and convert the <code>Flow</code> to a <code>List&lt;Author&gt;</code></td>
 </tr>
 </table>
 </div>
@@ -1386,7 +1407,7 @@ abstract class AppDatabase : RoomDatabase() {
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0<br>
-Last updated 2023-03-29 21:36:34 UTC
+Last updated 2023-03-30 07:58:00 UTC
 </div>
 </div>
 </body>
